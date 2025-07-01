@@ -278,7 +278,7 @@ function App() {
                     <div className="glass-card glass-card-hover rounded-2xl p-8">
                       <h3 className="text-2xl font-semibold text-white mb-4">My Journey</h3>
                       <p className="text-white/80 leading-relaxed mb-4">
-                        I'm a Computer Science graduate from The NorthCap University with a CGPA of 8.5, 
+                        I'm a Computer Science graduate from The NorthCap University with a CGPA of 8.53, 
                         passionate about full-stack development and software engineering.
                       </p>
                       <p className="text-white/80 leading-relaxed mb-4">
@@ -304,7 +304,7 @@ function App() {
                         <div>
                           <h4 className="text-lg font-medium text-purple-400">The NorthCap University</h4>
                           <p className="text-white/80">B.Tech Computer Science (2021-2025) - Graduated</p>
-                          <p className="text-white/60">CGPA: 8.5</p>
+                          <p className="text-white/60">CGPA: 8.53</p>
                         </div>
                         <div>
                           <h4 className="text-lg font-medium text-purple-400">Amazon ML Summer School</h4>
