@@ -299,7 +299,7 @@ const ContactSection = () => {
               </p>
               <Button 
                 className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white"
-                onClick={() => window.open('https://drive.google.com/file/d/1y-E6tCk_HBt3mWfU-k93Eycxk7crkUdm/view', '_blank')}
+                onClick={() => window.open('https://drive.google.com/file/d/1Z9wZrCUtm3T3kHwUOMr6-Badut5UjcJa/view?usp=sharing', '_blank')}
               >
                 <Download className="mr-2 h-5 w-5" />
                 Download Resume

@@ -5,15 +5,16 @@ const ExperienceSection = () => {
   const experiences = [
     {
       id: 1,
-      title: "Software Engineer Intern",
+      title: "Software Engineer",
       company: "Nagarro",
       location: "Gurugram",
       period: "January 2025 – Present",
       description: [
-        "Created Java applications using Spring Boot, Hibernate, and REST APIs, implementing multi-threaded file processing and web application features.",
-        "Integrated CI/CD pipelines with Jenkins and SonarQube, ensuring 80%+ test coverage with JUnit."
+        "Enhanced iLease, a FinTech lending platform for Erste Bank, by developing robust Spring Boot microservices and multi-threaded processing modules, resulting in a 15% improvement in data processing efficiency.",
+        "Developed and maintained core REST APIs in Spring Boot; contributed to the Angular frontend and cross-team feature development.",
+        "Integrated CI/CD pipelines using Jenkins and SonarQube, ensuring 80%+ test coverage with JUnit and maintaining code quality across distributed Agile teams."
       ],
-      technologies: ["Java", "Spring Boot", "Hibernate", "REST APIs", "Jenkins", "SonarQube", "JUnit"],
+      technologies: ["Java", "Spring Boot", "Hibernate", "REST APIs", "Jenkins", "SonarQube", "JUnit", "Angular"],
       current: true
     },
     {
@@ -23,7 +24,7 @@ const ExperienceSection = () => {
       location: "Remote",
       period: "August 2024 – October 2024",
       description: [
-        "Revamped AI-based sales assistant, improved dashboard UI and backend, increased user engagement by 25%.",
+        "Independently managed full-stack development lifecycle in a remote environment; revamped AI-based sales assistant, improving dashboard UI and backend, increasing user engagement by 25%.",
         "Integrated SEO practices and Lighthouse reports, boosting site speed by 30% and search rankings by 20%.",
         "Developed and optimized backend APIs, enhancing system performance and data processing efficiency by 40%."
       ],
@@ -37,8 +38,8 @@ const ExperienceSection = () => {
       location: "Remote",
       period: "September 2023 – October 2023",
       description: [
-        "Selected from thousands of applicants nationwide to participate in Amazon ML Summer School'23, an exclusive program for advanced Machine Learning training.",
-        "Gained in-depth knowledge of Supervised Learning, Unsupervised Learning, Deep Neural Networks, Probabilistic Graphical Models, and Reinforcement Learning."
+        "Selected from over 60,000+ applicants nationwide (5% acceptance rate) to participate in exclusive Amazon ML Summer School’23 program.",
+        "Gained in-depth knowledge of probabilistic graphical models, reinforcement learning, deep neural networks, unsupervised learning, and supervised learning."
       ],
       technologies: ["Machine Learning", "Deep Learning", "Neural Networks", "Reinforcement Learning"],
       current: false

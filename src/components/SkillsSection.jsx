@@ -59,17 +59,17 @@ const SkillsSection = () => {
     {
       icon: <Trophy className="h-8 w-8" />,
       title: "Specialist on CodeForces",
-      description: "Achieved Specialist rank demonstrating strong algorithmic skills"
+      description: "Achieved Specialist rank (top 15% globally) with 1600+ rating, solving 500+ algorithmic problems."
     },
     {
       icon: <Target className="h-8 w-8" />,
       title: "500+ DSA Problems",
-      description: "Solved across LeetCode, CodeForces, and HackerRank"
+      description: "Solved across LeetCode, CodeForces, and HackerRank."
     },
     {
       icon: <Cloud className="h-8 w-8" />,
       title: "AWS Certified",
-      description: "Cloud Developing & Cloud Foundations certifications"
+      description: "Certified in AWS Academy Cloud Developing and AWS Academy Cloud Foundations."
     }
   ]
 

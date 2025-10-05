@@ -4,7 +4,7 @@ import { Github, ExternalLink, Eye, Filter } from 'lucide-react'
 import { Button } from '@/components/ui/button.jsx'
 
 const ProjectsSection = () => {
-  const [activeFilter, setActiveFilter] = useState('all')
+  const [activeFilter, setActiveFilter] = useState('fullstack')
 
   const projects = [
     {
@@ -30,29 +30,44 @@ const ProjectsSection = () => {
     },
     {
       id: 2,
-      title: "QueryConnect",
-      description: "A Q&A platform with authentication, posting, filtering, and statistics using Spring Boot REST APIs and JWT authentication.",
-      longDescription: "Developed a comprehensive Q&A platform with Spring Boot backend and Angular 19 frontend. Improved content search by 35% and reduced load time by 20% through optimized APIs and responsive design.",
-      image: "https://skillicons.dev/icons?i=spring,angular,mysql,java&theme=dark&perline=2",
-      technologies: ["Spring Boot", "Angular 19", "MySQL", "JWT", "REST API"],
+      title: "TaskForge",
+      description: "A self-hosted Jira-style tracker with 5-tier RBAC and Kanban dashboards.",
+      longDescription: "Shipped a self-hosted Jira-style tracker with 5-tier RBAC (Spring Security + JWT) and Kanban dashboards with comprehensive API documentation. Containerized with Docker + docker-compose for one-command spin-up; integrated Spring Scheduler e-mail reminders, improving on-time task closure by 40%.",
+      image: "https://skillicons.dev/icons?i=spring,java,nextjs,mysql&theme=dark&perline=2",
+      technologies: ["Spring Boot 3", "Next.js 14", "MySQL", "JWT"],
       category: "fullstack",
-      github: "https://github.com/harshcode1/QueryConnect",
-      demo: "https://github.com/harshcode1/QueryConnect",
+      github: "https://github.com/harshcode1/TaskForge-Backend",
+      demo: "https://github.com/harshcode1/TaskForge-Backend",
       metrics: [
-        { label: "Search Performance", value: "+35%", color: "text-green-400" },
-        { label: "Load Time", value: "-20%", color: "text-blue-400" },
-        { label: "User Experience", value: "Responsive", color: "text-purple-400" }
+        { label: "On-Time Task Closure", value: "+40%", color: "text-green-400" }
       ],
       achievements: [
-        "35% improvement in content search",
-        "20% reduction in load time",
-        "Responsive UI design"
+        "Improved on-time task closure by 40%"
       ]
     },
     {
       id: 3,
+      title: "BetterMind",
+      description: "An AI-driven mental health platform with journaling, mood tracking, and interactive chat.",
+      longDescription: "Launched an AI-driven mental health platform with journaling, mood tracking, and interactive chat; achieved a 98/100 Lighthouse score and maintained sub-150ms chat latency. Leveraged Next.js 13’s App Router with Static Site Generation (SSG) for landing pages and Server-Side Rendering (SSR) for dashboards; synced appointments with Google Calendar via OAuth.",
+      image: "https://skillicons.dev/icons?i=nextjs,tailwind,mongodb,openai&theme=dark&perline=2",
+      technologies: ["Next.js 13", "Tailwind CSS", "MongoDB", "OpenAI API"],
+      category: "fullstack",
+      github: "https://github.com/harshcode1/BetterMind",
+      demo: "https://github.com/harshcode1/BetterMind",
+      metrics: [
+        { label: "Lighthouse Score", value: "98/100", color: "text-green-400" },
+        { label: "Chat Latency", value: "<150ms", color: "text-blue-400" }
+      ],
+      achievements: [
+        "Achieved a 98/100 Lighthouse score",
+        "Maintained sub-150ms chat latency"
+      ]
+    },
+    {
+      id: 4,
       title: "Cryptonite",
-      description: "A cryptocurrency dashboard with live prices, interactive charts, and detailed coin pages using Chart.js and CoinGecko API.",
+      description: "A cryptocurrency dashboard with live prices, interactive charts, and detailed coin pages.",
       longDescription: "Created a modern crypto dashboard featuring real-time price tracking, interactive charts, and comprehensive coin information. Boosted performance by 20% using Next.js Image optimization and implemented responsive design with Tailwind CSS.",
       image: "https://skillicons.dev/icons?i=nextjs,react,tailwind,js&theme=dark&perline=2",
       technologies: ["Next.js", "Tailwind CSS", "Chart.js", "CoinGecko API", "React"],
