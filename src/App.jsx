@@ -85,10 +85,9 @@ export default function App() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('home')
   const [scrolled, setScrolled]   = useState(false)
-  const [mouse, setMouse]         = useState({ x: -999, y: -999 })
-  const [spotOn, setSpotOn]       = useState(false)
-  const heroRef = useRef(null)
-  const role    = useTypewriter(ROLES)
+  const heroRef      = useRef(null)
+  const spotlightRef = useRef(null)
+  const role         = useTypewriter(ROLES)
 
   /* dark mode */
   useEffect(() => { document.documentElement.classList.add('dark') }, [])
@@ -112,12 +111,18 @@ export default function App() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  /* mouse spotlight */
+  /* mouse spotlight — direct DOM write, no React re-render on every move */
   const onMouseMove = useCallback((e) => {
     const rect = heroRef.current?.getBoundingClientRect()
-    if (!rect) return
-    setMouse({ x: e.clientX - rect.left, y: e.clientY - rect.top })
-    setSpotOn(true)
+    const el   = spotlightRef.current
+    if (!rect || !el) return
+    el.style.left    = `${e.clientX - rect.left}px`
+    el.style.top     = `${e.clientY - rect.top}px`
+    el.style.opacity = '1'
+  }, [])
+
+  const onMouseLeave = useCallback(() => {
+    if (spotlightRef.current) spotlightRef.current.style.opacity = '0'
   }, [])
 
   const scrollTo = useCallback((id) => {
@@ -206,7 +211,7 @@ export default function App() {
           id="home"
           ref={heroRef}
           onMouseMove={onMouseMove}
-          onMouseLeave={() => setSpotOn(false)}
+          onMouseLeave={onMouseLeave}
           className="relative isolate flex min-h-screen flex-col justify-center overflow-hidden px-4 pt-20 sm:px-6 lg:px-8"
         >
           {/* background layers */}
@@ -216,8 +221,9 @@ export default function App() {
 
           {/* mouse spotlight */}
           <div
+            ref={spotlightRef}
             className="hero-spotlight pointer-events-none absolute -z-10"
-            style={{ left: mouse.x, top: mouse.y, opacity: spotOn ? 1 : 0 }}
+            style={{ opacity: 0 }}
           />
 
           <div className="mx-auto w-full max-w-6xl">

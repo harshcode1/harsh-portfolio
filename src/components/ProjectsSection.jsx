@@ -146,6 +146,7 @@ const ProjectsSection = () => {
               type="button"
               key={filter}
               onClick={() => setActiveFilter(filter)}
+              aria-pressed={activeFilter === filter}
               className={`rounded-full px-4 py-1.5 text-sm font-semibold transition-all duration-200 ${
                 activeFilter === filter
                   ? 'bg-white text-[#080c14] shadow-[0_0_18px_rgba(255,255,255,0.18)]'

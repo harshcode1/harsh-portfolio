@@ -91,6 +91,9 @@
   background-size: 180px 180px;
   animation: noise-scroll 8s steps(1) infinite;
 }
+@media (prefers-reduced-motion: reduce) {
+  .noise-overlay { animation: none; }
+}
 
 /* ─── Gradient text utilities ───────────────────────────────────────────── */
 .text-gradient {
