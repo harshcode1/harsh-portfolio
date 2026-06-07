@@ -1,204 +1,193 @@
-import { motion } from 'framer-motion'
-import { Code, Database, Cloud, Wrench, Trophy, Target } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { motion, useInView } from 'framer-motion'
+import { Bot, Brain, Code2, Database, GitBranch, ShieldCheck } from 'lucide-react'
 
-const SkillsSection = () => {
-  const skillCategories = [
-    {
-      id: 1,
-      title: "Programming Languages",
-      icon: <Code className="h-6 w-6" />,
-      skills: [
-        { name: "Java", level: 90, color: "from-orange-500 to-red-500" },
-        { name: "JavaScript", level: 85, color: "from-yellow-400 to-orange-500" },
-        { name: "Python", level: 80, color: "from-blue-500 to-green-500" },
-        { name: "C", level: 85, color: "from-blue-600 to-indigo-600" },
-        { name: "SQL", level: 85, color: "from-blue-600 to-purple-600" },
-        { name: "HTML/CSS", level: 90, color: "from-pink-500 to-red-500" }
-      ]
-    },
-    {
-      id: 2,
-      title: "Web Technologies",
-      icon: <Target className="h-6 w-6" />,
-      skills: [
-        { name: "React.js", level: 90, color: "from-blue-400 to-cyan-400" },
-        { name: "Next.js", level: 85, color: "from-gray-700 to-gray-900" },
-        { name: "Spring Boot", level: 88, color: "from-green-500 to-emerald-500" },
-        { name: "Node.js", level: 80, color: "from-green-600 to-lime-600" },
-        { name: "Express.js", level: 75, color: "from-gray-600 to-gray-800" }
-      ]
-    },
-    {
-      id: 3,
-      title: "Databases",
-      icon: <Database className="h-6 w-6" />,
-      skills: [
-        { name: "MongoDB", level: 85, color: "from-green-500 to-green-700" },
-        { name: "MySQL", level: 88, color: "from-blue-500 to-blue-700" },
-        { name: "Hibernate", level: 80, color: "from-orange-500 to-red-600" }
-      ]
-    },
-    {
-      id: 4,
-      title: "Tools & Platforms",
-      icon: <Wrench className="h-6 w-6" />,
-      skills: [
-        { name: "Git", level: 90, color: "from-orange-500 to-red-500" },
-        { name: "Docker", level: 75, color: "from-blue-500 to-blue-700" },
-        { name: "Jenkins", level: 80, color: "from-blue-600 to-indigo-600" },
-        { name: "Maven", level: 85, color: "from-purple-500 to-pink-500" },
-        { name: "SonarQube", level: 75, color: "from-blue-400 to-blue-600" },
-        { name: "VS Code", level: 90, color: "from-blue-500 to-cyan-500" },
-        { name: "IntelliJ IDEA", level: 85, color: "from-red-500 to-pink-500" },
-        { name: "Postman", level: 85, color: "from-orange-400 to-red-400" }
-      ]
-    }
-  ]
+const skillGroups = [
+  {
+    title: 'AI & Agentic Systems',
+    icon: Bot,
+    skills: ['Multi-agent Orchestration', 'LLM Integration', 'Agentic Workflows', 'Prompt Engineering', 'Anthropic SDK', 'Phoenix OS', 'Deterministic AI']
+  },
+  {
+    title: 'Backend Engineering',
+    icon: Code2,
+    skills: ['Java 8+', 'Spring Boot 3', 'Spring Security', 'Hibernate', 'REST APIs', 'JUnit', 'Mockito']
+  },
+  {
+    title: 'Frontend',
+    icon: Brain,
+    skills: ['React.js', 'Next.js 14', 'JavaScript ES6+', 'TypeScript', 'Tailwind CSS', 'Node.js', 'Express.js']
+  },
+  {
+    title: 'Data & Persistence',
+    icon: Database,
+    skills: ['MySQL', 'MongoDB', 'SQL', 'Schema Design', 'JWT', 'OAuth 2.0']
+  },
+  {
+    title: 'DevOps & Cloud',
+    icon: GitBranch,
+    skills: ['Docker', 'GitHub Actions', 'Jenkins', 'SonarQube', 'Azure', 'AWS', 'GCP', 'CI/CD', 'DevSecOps', 'TDD']
+  },
+  {
+    title: 'CS Foundations',
+    icon: ShieldCheck,
+    skills: ['System Design', 'Microservices', 'OOP', 'DSA', 'Operating Systems', 'DBMS', 'Distributed Systems']
+  }
+]
 
-  const achievements = [
-    {
-      icon: <Trophy className="h-8 w-8" />,
-      title: "Specialist on CodeForces",
-      description: "Achieved Specialist rank (top 15% globally) with 1600+ rating, solving 500+ algorithmic problems."
-    },
-    {
-      icon: <Target className="h-8 w-8" />,
-      title: "500+ DSA Problems",
-      description: "Solved across LeetCode, CodeForces, and HackerRank."
-    },
-    {
-      icon: <Cloud className="h-8 w-8" />,
-      title: "AWS Certified",
-      description: "Certified in AWS Academy Cloud Developing and AWS Academy Cloud Foundations."
-    }
-  ]
+/* Two marquee rows with different speeds + directions */
+const ROW_1 = ['Multi-agent AI', 'Phoenix OS', 'LLM Orchestration', 'Java', 'Spring Boot', 'React.js', 'Next.js 14', 'TypeScript', 'Node.js', 'Docker', 'AWS', 'Azure', 'GCP', 'Anthropic SDK', 'Spring Security']
+const ROW_2 = ['Agentic Workflows', 'Prompt Engineering', 'TDD', 'JUnit', 'Mockito', 'CI/CD', 'GitHub Actions', 'SonarQube', 'System Design', 'Microservices', 'DSA', 'Tailwind CSS', 'DevSecOps', 'Hibernate']
 
+const COUNTERS = [
+  { end: 19,   suffix: '+',  label: 'Phoenix OS\nagents built' },
+  { end: 85,   suffix: '%',  label: 'frontend handoff\ntime cut' },
+  { end: 1600, suffix: '+',  label: 'Codeforces\nrating' },
+  { end: 500,  suffix: '+',  label: 'DSA problems\nsolved' }
+]
+
+function Counter({ end, suffix, duration = 1800 }) {
+  const [count, setCount] = useState(0)
+  const ref = useRef(null)
+  const inView = useInView(ref, { once: true, margin: '-50px' })
+  const started = useRef(false)
+
+  useEffect(() => {
+    if (!inView || started.current) return
+    started.current = true
+    const steps = 60
+    const step = end / steps
+    const interval = duration / steps
+    let cur = 0
+    const t = setInterval(() => {
+      cur += step
+      if (cur >= end) { setCount(end); clearInterval(t) }
+      else setCount(Math.floor(cur))
+    }, interval)
+    return () => clearInterval(t)
+  }, [inView, end, duration])
+
+  const display = end >= 10000 ? `${Math.round(count / 1000)}K` : count
+
+  return <span ref={ref}>{display}{suffix}</span>
+}
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (i) => ({
+    opacity: 1, y: 0,
+    transition: { duration: 0.48, delay: i * 0.07, ease: [0.25, 0.46, 0.45, 0.94] }
+  })
+}
+
+export default function SkillsSection() {
   return (
-    <section id="skills" className="py-20 px-4">
-      <div className="max-w-7xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Skills & Expertise</h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-purple-600 to-blue-600 mx-auto mb-8"></div>
-          <p className="text-white/60 max-w-2xl mx-auto">
-            A comprehensive overview of my technical skills, tools, and achievements 
-            in software development and competitive programming.
-          </p>
-        </motion.div>
+    <section id="skills" className="section-shell">
+      <div className="section-heading">
+        <p className="eyebrow">Skills</p>
+        <h2>AI-native stack built for production delivery.</h2>
+        <p>
+          Multi-agent orchestration, backend depth, frontend execution, and cloud deployment —
+          combined into a stack that ships AI systems and software that actually works.
+        </p>
+      </div>
 
-        {/* Skills Categories */}
-        <div className="grid md:grid-cols-2 gap-8 mb-16">
-          {skillCategories.map((category, categoryIndex) => (
-            <motion.div
-              key={category.id}
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: categoryIndex * 0.1 }}
-              className="bg-white/5 backdrop-blur-md rounded-2xl p-6 border border-white/10 hover:bg-white/10 transition-all duration-300"
-            >
-              <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg text-white">
-                  {category.icon}
-                </div>
-                <h3 className="text-xl font-semibold text-white">{category.title}</h3>
+      {/* skill group cards */}
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: '-50px' }}
+        className="mx-auto grid max-w-6xl gap-4 sm:grid-cols-2 xl:grid-cols-3"
+      >
+        {skillGroups.map((group, i) => {
+          const Icon = group.icon
+          return (
+            <motion.div key={group.title} custom={i} variants={cardVariants} className="card card-pad">
+              <div className="mb-4 flex items-center gap-3">
+                <span className="skill-icon"><Icon className="size-4" /></span>
+                <h3 className="text-sm font-bold">{group.title}</h3>
               </div>
-
-              <div className="space-y-4">
-                {category.skills.map((skill, skillIndex) => (
-                  <motion.div
-                    key={skill.name}
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.6, delay: (categoryIndex * 0.1) + (skillIndex * 0.05) }}
-                    className="space-y-2"
-                  >
-                    <div className="flex justify-between items-center">
-                      <span className="text-white/90 font-medium">{skill.name}</span>
-                      <span className="text-white/60 text-sm">{skill.level}%</span>
-                    </div>
-                    <div className="w-full bg-white/10 rounded-full h-2 overflow-hidden">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        whileInView={{ width: `${skill.level}%` }}
-                        transition={{ duration: 1, delay: (categoryIndex * 0.1) + (skillIndex * 0.05) }}
-                        className={`h-full bg-gradient-to-r ${skill.color} rounded-full relative`}
-                      >
-                        <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
-                      </motion.div>
-                    </div>
-                  </motion.div>
-                ))}
+              <div className="flex flex-wrap gap-1.5">
+                {group.skills.map(s => <span key={s} className="tech-pill">{s}</span>)}
               </div>
             </motion.div>
-          ))}
+          )
+        })}
+      </motion.div>
+
+      {/* marquee rows */}
+      <div className="mx-auto mt-10 max-w-6xl space-y-3 overflow-hidden">
+        <div className="marquee-wrap">
+          <div className="marquee-track">
+            {[...ROW_1, ...ROW_1].map((s, i) => (
+              <span key={i} className="marquee-tag">{s}</span>
+            ))}
+          </div>
         </div>
-
-        {/* Achievements */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="mb-16"
-        >
-          <h3 className="text-2xl font-bold text-white text-center mb-8">Achievements & Certifications</h3>
-          <div className="grid md:grid-cols-3 gap-6">
-            {achievements.map((achievement, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="bg-white/5 backdrop-blur-md rounded-2xl p-6 border border-white/10 text-center hover:bg-white/10 transition-all duration-300"
-              >
-                <div className="inline-flex p-3 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full text-white mb-4">
-                  {achievement.icon}
-                </div>
-                <h4 className="text-lg font-semibold text-white mb-2">{achievement.title}</h4>
-                <p className="text-white/70 text-sm">{achievement.description}</p>
-              </motion.div>
+        <div className="marquee-wrap">
+          <div className="marquee-track marquee-track-rev">
+            {[...ROW_2, ...ROW_2].map((s, i) => (
+              <span key={i} className="marquee-tag">{s}</span>
             ))}
           </div>
-        </motion.div>
+        </div>
+      </div>
 
-        {/* Core Competencies */}
+      {/* animated counters */}
+      <div className="mx-auto mt-12 max-w-6xl">
+        <p className="eyebrow mb-5 text-center">By the numbers</p>
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="bg-white/5 backdrop-blur-md rounded-2xl p-8 border border-white/10"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-50px' }}
+          className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4"
         >
-          <h3 className="text-2xl font-bold text-white text-center mb-8">Core Competencies</h3>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              "Data Structures & Algorithms",
-              "Object-Oriented Programming",
-              "Database Management Systems",
-              "Computer Networks",
-              "Operating Systems",
-              "Machine Learning",
-              "Distributed Systems",
-              "Software Engineering"
-            ].map((competency, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: index * 0.05 }}
-                className="bg-white/10 rounded-lg p-4 text-center border border-white/20 hover:bg-white/20 transition-all duration-300"
-              >
-                <span className="text-white/90 font-medium text-sm">{competency}</span>
-              </motion.div>
-            ))}
-          </div>
+          {COUNTERS.map((c, i) => (
+            <motion.div key={c.label} custom={i} variants={cardVariants} className="counter-card">
+              <div className="counter-num">
+                <Counter end={c.end} suffix={c.suffix} />
+              </div>
+              <p className="counter-label whitespace-pre-line">{c.label}</p>
+            </motion.div>
+          ))}
         </motion.div>
+      </div>
+
+      {/* certs */}
+      <div className="mx-auto mt-8 grid max-w-6xl gap-4 lg:grid-cols-2">
+        {[
+          {
+            title: 'Phoenix OS & Agentic AI',
+            body: 'Contributor to Phoenix OS (Nagarro Ventures Studios) — an agentic framework featuring 19 specialized agents, a 62-file LTM memory system, and deterministic AI output via frozen artifact cascades. Hands-on with multi-agent orchestration, LLM tool-calling, and enterprise-grade prompt pipelines.'
+          },
+          {
+            title: 'Achievements & Certifications',
+            bullets: [
+              'Amazon ML Summer School \'23 — selected from 60,000+ applicants (~5% acceptance)',
+              'AWS Academy Cloud Developing',
+              'AWS Academy Cloud Foundations',
+              'Codeforces Specialist (top 15% globally) — 1600+ rating, 500+ problems solved'
+            ]
+          }
+        ].map((item, i) => (
+          <motion.div
+            key={item.title}
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.48, delay: i * 0.08 }}
+            className="card card-pad"
+          >
+            <h3 className="text-sm font-bold">{item.title}</h3>
+            {item.body && <p className="mt-2.5 text-sm leading-6">{item.body}</p>}
+            {item.bullets && (
+              <ul className="mt-3 space-y-2">
+                {item.bullets.map(b => <li key={b} className="impact-item">{b}</li>)}
+              </ul>
+            )}
+          </motion.div>
+        ))}
       </div>
     </section>
   )
 }
-
-export default SkillsSection
-

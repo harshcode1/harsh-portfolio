@@ -1,270 +1,250 @@
 import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { Github, ExternalLink, Eye, Filter } from 'lucide-react'
-import { Button } from '@/components/ui/button.jsx'
+import { motion, AnimatePresence } from 'framer-motion'
+import { ArrowUpRight, Github, Layers3 } from 'lucide-react'
+
+const projects = [
+  {
+    title: 'TaskForge',
+    type: 'Full Stack',
+    description:
+      'Self-hosted Jira-style tracker with 5-tier RBAC, drag-and-drop Kanban, Swagger API docs, Docker deployment, and automated email reminders.',
+    gradient: 'from-cyan-500/25 via-blue-500/15 to-indigo-600/25',
+    icon: '⚡',
+    stack: ['Spring Boot 3', 'Next.js 14', 'MySQL', 'JWT', 'JUnit', 'Docker'],
+    proof: [
+      '5-tier RBAC via Spring Security + JWT; REST API docs via Swagger.',
+      'Docker + docker-compose one-command spin-up; Spring Scheduler reminders — improved on-time closure by 40%.',
+      'Drag-and-drop Kanban with sub-100ms transitions for 500+ concurrent users.',
+    ],
+    github: 'https://github.com/harshcode1/TaskForge-Backend',
+    demo: '',
+    featured: true
+  },
+  {
+    title: 'BetterMind',
+    type: 'Full Stack',
+    description:
+      'Mental health platform connecting users with qualified therapists — mood tracking, appointment scheduling, secure messaging, and mental health assessments.',
+    gradient: 'from-violet-500/25 via-purple-500/15 to-pink-600/25',
+    icon: '🧠',
+    stack: ['Next.js 14', 'MongoDB', 'Google OAuth', 'Google Calendar API', 'JWT', 'Tailwind CSS'],
+    proof: [
+      'Therapist discovery + scheduling via Google Calendar API integration.',
+      'Secure messaging and mental health assessments with role-based access.',
+      'Google OAuth authentication; session-safe JWT token management.',
+    ],
+    github: 'https://github.com/harshcode1/BetterMind',
+    demo: '',
+    featured: true
+  },
+  {
+    title: 'Instant-Connect',
+    type: 'Full Stack',
+    description:
+      'WhatsApp-style real-time group chat — one-on-one and group messaging, typing indicators, online/offline presence, and message read receipts.',
+    gradient: 'from-emerald-500/25 via-teal-500/15 to-cyan-600/25',
+    icon: '💬',
+    stack: ['React', 'Node.js', 'Express', 'Socket.IO', 'MongoDB', 'Chakra UI'],
+    proof: [
+      'Real-time bidirectional messaging via Socket.IO with typing indicators and read receipts.',
+      'Group management with online/offline presence tracking.',
+      'Full MERN stack; chat search and message history persistence.',
+    ],
+    github: 'https://github.com/harshcode1/Instant-Connect',
+    demo: '',
+    featured: true
+  },
+  {
+    title: 'Cryptonite',
+    type: 'Frontend',
+    description:
+      'PWA crypto-trading simulator with offline INR wallet, live coin data via CoinGecko, CSV portfolio export, and high-performance React rendering.',
+    gradient: 'from-orange-500/25 via-amber-400/15 to-yellow-600/25',
+    icon: '📈',
+    stack: ['Next.js 14', 'React 18', 'CoinGecko API', 'Recharts', 'PWA'],
+    proof: [
+      'Multi-layer caching reduced CoinGecko API calls by 80%.',
+      'react-window optimisation cut 10,000-row table draw time by 65%.',
+      'Charts load under 200ms; offline INR wallet + CSV export.',
+    ],
+    github: 'https://github.com/harshcode1/Cryptonite',
+    demo: '',
+    featured: false
+  },
+  {
+    title: 'QueryConnect',
+    type: 'Full Stack',
+    description:
+      'Community-driven Q&A platform — question posting, answers, comments, search, and role-based access control across frontend and Spring Boot backend.',
+    gradient: 'from-blue-500/25 via-indigo-500/15 to-violet-600/25',
+    icon: '❓',
+    stack: ['Next.js', 'Spring Boot', 'MySQL', 'JWT', 'Tailwind CSS'],
+    proof: [
+      'Full-stack RBAC: Spring Boot REST backend + React frontend.',
+      'Search, community stats, question/answer/comment flows.',
+      'JWT-secured API with Spring Security; MySQL persistence layer.',
+    ],
+    github: 'https://github.com/harshcode1/QueryConnect',
+    demo: '',
+    featured: false
+  },
+  {
+    title: 'FundMeNow',
+    type: 'Frontend',
+    description:
+      'Creator donation platform — no login required for donors, creator profiles, and Razorpay payment gateway integration for seamless transactions.',
+    gradient: 'from-rose-500/25 via-pink-500/15 to-fuchsia-600/25',
+    icon: '💸',
+    stack: ['Next.js', 'Tailwind CSS', 'Razorpay API', 'PostCSS'],
+    proof: [
+      'Razorpay payment integration — donors can contribute without an account.',
+      'Creator profile pages with customisable funding goals.',
+      'Optimised Lighthouse score; responsive across all breakpoints.',
+    ],
+    github: 'https://github.com/harshcode1/FundMeNow',
+    demo: '',
+    featured: false
+  }
+]
+
+const filters = ['Featured', 'Full Stack', 'Frontend', 'All']
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.48, delay: i * 0.07, ease: [0.25, 0.46, 0.45, 0.94] }
+  })
+}
 
 const ProjectsSection = () => {
-  const [activeFilter, setActiveFilter] = useState('fullstack')
+  const [activeFilter, setActiveFilter] = useState('Featured')
 
-  const projects = [
-    {
-      id: 1,
-      title: "FundMeNow",
-      description: "A full-stack donation platform supporting profile-based and anonymous donations with secure payment processing and robust authentication.",
-      longDescription: "Built a comprehensive donation platform that increased user retention by 25% and reduced transaction failure by 15%. Integrated Razorpay for secure payment processing and NextAuth for authentication, reducing unauthorized access by 30%.",
-      image: "https://skillicons.dev/icons?i=nextjs,mongodb,tailwind,vercel&theme=dark&perline=2",
-      technologies: ["Next.js", "Razorpay", "NextAuth", "MongoDB", "Tailwind CSS"],
-      category: "fullstack",
-      github: "https://github.com/harshcode1/FundMeNow",
-      demo: "https://github.com/harshcode1/FundMeNow",
-      metrics: [
-        { label: "User Retention", value: "+25%", color: "text-green-400" },
-        { label: "Transaction Success", value: "+15%", color: "text-blue-400" },
-        { label: "Security Improvement", value: "+30%", color: "text-purple-400" }
-      ],
-      achievements: [
-        "25% increase in user retention",
-        "15% reduction in transaction failure", 
-        "30% reduction in unauthorized access"
-      ]
-    },
-    {
-      id: 2,
-      title: "TaskForge",
-      description: "A self-hosted Jira-style tracker with 5-tier RBAC and Kanban dashboards.",
-      longDescription: "Shipped a self-hosted Jira-style tracker with 5-tier RBAC (Spring Security + JWT) and Kanban dashboards with comprehensive API documentation. Containerized with Docker + docker-compose for one-command spin-up; integrated Spring Scheduler e-mail reminders, improving on-time task closure by 40%.",
-      image: "https://skillicons.dev/icons?i=spring,java,nextjs,mysql&theme=dark&perline=2",
-      technologies: ["Spring Boot 3", "Next.js 14", "MySQL", "JWT"],
-      category: "fullstack",
-      github: "https://github.com/harshcode1/TaskForge-Backend",
-      demo: "https://github.com/harshcode1/TaskForge-Backend",
-      metrics: [
-        { label: "On-Time Task Closure", value: "+40%", color: "text-green-400" }
-      ],
-      achievements: [
-        "Improved on-time task closure by 40%"
-      ]
-    },
-    {
-      id: 3,
-      title: "BetterMind",
-      description: "An AI-driven mental health platform with journaling, mood tracking, and interactive chat.",
-      longDescription: "Launched an AI-driven mental health platform with journaling, mood tracking, and interactive chat; achieved a 98/100 Lighthouse score and maintained sub-150ms chat latency. Leveraged Next.js 13’s App Router with Static Site Generation (SSG) for landing pages and Server-Side Rendering (SSR) for dashboards; synced appointments with Google Calendar via OAuth.",
-      image: "https://skillicons.dev/icons?i=nextjs,tailwind,mongodb,openai&theme=dark&perline=2",
-      technologies: ["Next.js 13", "Tailwind CSS", "MongoDB", "OpenAI API"],
-      category: "fullstack",
-      github: "https://github.com/harshcode1/BetterMind",
-      demo: "https://github.com/harshcode1/BetterMind",
-      metrics: [
-        { label: "Lighthouse Score", value: "98/100", color: "text-green-400" },
-        { label: "Chat Latency", value: "<150ms", color: "text-blue-400" }
-      ],
-      achievements: [
-        "Achieved a 98/100 Lighthouse score",
-        "Maintained sub-150ms chat latency"
-      ]
-    },
-    {
-      id: 4,
-      title: "Cryptonite",
-      description: "A cryptocurrency dashboard with live prices, interactive charts, and detailed coin pages.",
-      longDescription: "Created a modern crypto dashboard featuring real-time price tracking, interactive charts, and comprehensive coin information. Boosted performance by 20% using Next.js Image optimization and implemented responsive design with Tailwind CSS.",
-      image: "https://skillicons.dev/icons?i=nextjs,react,tailwind,js&theme=dark&perline=2",
-      technologies: ["Next.js", "Tailwind CSS", "Chart.js", "CoinGecko API", "React"],
-      category: "frontend",
-      github: "https://github.com/harshcode1/Cryptonite",
-      demo: "https://github.com/harshcode1/Cryptonite",
-      metrics: [
-        { label: "Performance", value: "+20%", color: "text-green-400" },
-        { label: "Image Optimization", value: "Next.js", color: "text-blue-400" },
-        { label: "Design", value: "Responsive", color: "text-purple-400" }
-      ],
-      achievements: [
-        "20% performance improvement",
-        "Real-time price tracking",
-        "Interactive chart visualization"
-      ]
-    }
-  ]
-
-  const categories = [
-    { id: 'all', label: 'All Projects' },
-    { id: 'fullstack', label: 'Full Stack' },
-    { id: 'frontend', label: 'Frontend' },
-    { id: 'backend', label: 'Backend' }
-  ]
-
-  const filteredProjects = activeFilter === 'all' 
-    ? projects 
-    : projects.filter(project => project.category === activeFilter)
+  const filtered = projects.filter((p) => {
+    if (activeFilter === 'All') return true
+    if (activeFilter === 'Featured') return p.featured
+    return p.type === activeFilter
+  })
 
   return (
-    <section id="projects" className="py-20 px-4">
-      <div className="max-w-7xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Projects</h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-purple-600 to-blue-600 mx-auto mb-8"></div>
-          <p className="text-white/60 max-w-2xl mx-auto">
-            Here are some of my recent projects that showcase my skills in full-stack development, 
-            modern web technologies, and problem-solving abilities.
-          </p>
-        </motion.div>
+    <section id="projects" className="section-shell">
+      <div className="section-heading">
+        <p className="eyebrow">Projects</p>
+        <h2>Selected work — scope, tradeoffs, impact.</h2>
+        <p>
+          Six projects spanning full-stack SaaS, real-time apps, payments, crypto, and FinTech —
+          each built around production concerns: auth, latency, deployment, and measurable wins.
+        </p>
+      </div>
 
-        {/* Filter Buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="flex flex-wrap justify-center gap-4 mb-12"
-        >
-          {categories.map((category) => (
-            <Button
-              key={category.id}
-              onClick={() => setActiveFilter(category.id)}
-              variant={activeFilter === category.id ? "default" : "outline"}
-              className={`${
-                activeFilter === category.id
-                  ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white'
-                  : 'border-white/20 text-white/80 hover:bg-white/10'
-              } transition-all duration-300`}
+      <div className="mx-auto max-w-6xl">
+        {/* filter tabs */}
+        <div className="mb-8 flex flex-wrap justify-center gap-2">
+          {filters.map((filter) => (
+            <button
+              type="button"
+              key={filter}
+              onClick={() => setActiveFilter(filter)}
+              aria-pressed={activeFilter === filter}
+              className={`rounded-full px-4 py-1.5 text-sm font-semibold transition-all duration-200 ${
+                activeFilter === filter
+                  ? 'bg-white text-[#080c14] shadow-[0_0_18px_rgba(255,255,255,0.18)]'
+                  : 'border border-white/10 bg-white/4 text-white/55 hover:border-white/20 hover:bg-white/8 hover:text-white'
+              }`}
             >
-              <Filter className="mr-2 h-4 w-4" />
-              {category.label}
-            </Button>
+              {filter}
+              {filter === 'All' && <span className="ml-1.5 opacity-50 text-xs">{projects.length}</span>}
+              {filter === 'Featured' && <span className="ml-1.5 opacity-50 text-xs">{projects.filter(p => p.featured).length}</span>}
+            </button>
           ))}
-        </motion.div>
+        </div>
 
-        {/* Projects Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredProjects.map((project, index) => (
-            <motion.div
-              key={project.id}
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: index * 0.1 }}
-              className="group"
-            >
-              <div className="h-full bg-white/5 backdrop-blur-md rounded-2xl overflow-hidden border border-white/10 hover:bg-white/10 transition-all duration-300 hover:scale-105 flex flex-col">
-                {/* Project Image */}
-                <div className="relative overflow-hidden flex-shrink-0">
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    className="w-full h-48 object-contain bg-gradient-to-br from-slate-800 to-slate-900 p-4 transition-transform duration-300 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <div className="absolute top-4 right-4 flex gap-2 opacity-70 group-hover:opacity-100 transition-opacity duration-300">
-                    <a
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="bg-black/70 backdrop-blur-sm p-2 rounded-full text-white hover:bg-black/90 hover:scale-110 transition-all duration-200 cursor-pointer"
-                      title="View GitHub Repository"
-                    >
-                      <Github className="h-4 w-4" />
-                    </a>
-                    <a
-                      href={project.demo}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="bg-black/70 backdrop-blur-sm p-2 rounded-full text-white hover:bg-black/90 hover:scale-110 transition-all duration-200 cursor-pointer"
-                      title="View Live Demo"
-                    >
-                      <ExternalLink className="h-4 w-4" />
-                    </a>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeFilter}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2 }}
+            className="grid gap-5 lg:grid-cols-2 xl:grid-cols-3"
+          >
+            {filtered.map((project, index) => (
+              <motion.article
+                key={project.title}
+                custom={index}
+                variants={cardVariants}
+                initial="hidden"
+                animate="visible"
+                className="project-card group"
+              >
+                {/* visual area */}
+                <div className="project-visual">
+                  <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient}`} />
+                  <div className="absolute inset-0" style={{ background: 'radial-gradient(circle at 50% 50%, rgba(255,255,255,0.04), transparent 65%)' }} />
+                  <div className="relative z-10 flex flex-col items-center gap-2">
+                    <span className="text-4xl">{project.icon}</span>
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-white/50 border border-white/15 rounded-full px-2.5 py-0.5">
+                      {project.type}
+                    </span>
                   </div>
                 </div>
 
-                {/* Project Content */}
-                <div className="p-6 flex flex-col flex-grow">
-                  <h3 className="text-xl font-semibold text-white mb-2">{project.title}</h3>
-                  <p className="text-white/70 text-sm mb-4 leading-relaxed">
-                    {project.description}
-                  </p>
-
-                  {/* Performance Metrics */}
-                  {project.metrics && (
-                    <div className="mb-4">
-                      <h4 className="text-sm font-medium text-purple-400 mb-2">Performance Impact:</h4>
-                      <div className="flex flex-wrap gap-2">
-                        {project.metrics.map((metric, i) => (
-                          <div key={i} className="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5">
-                            <div className="text-xs text-white/60">{metric.label}</div>
-                            <div className={`text-sm font-semibold ${metric.color}`}>{metric.value}</div>
-                          </div>
-                        ))}
-                      </div>
+                {/* body */}
+                <div className="project-body">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-cyan-400">
+                        <Layers3 className="size-3" />
+                        {project.type}
+                      </p>
+                      <h3 className="mt-1 text-lg font-bold">{project.title}</h3>
                     </div>
-                  )}
-
-                  {/* Achievements */}
-                  <div className="mb-4 flex-grow">
-                    <h4 className="text-sm font-medium text-purple-400 mb-2">Key Features:</h4>
-                    <ul className="space-y-1">
-                      {project.achievements.map((achievement, i) => (
-                        <li key={i} className="text-white/60 text-xs">
-                          • {achievement}
-                        </li>
-                      ))}
-                    </ul>
+                    {project.featured && (
+                      <span className="status-pill shrink-0 text-[10px]">Featured</span>
+                    )}
                   </div>
 
-                  {/* Technologies */}
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {project.technologies.map((tech, i) => (
-                      <span
-                        key={i}
-                        className="bg-white/10 text-white/90 text-xs px-2 py-1 rounded-md border border-white/20"
-                      >
+                  <p className="mt-2.5 text-white/55 text-xs leading-relaxed">{project.description}</p>
+
+                  <ul className="mt-3.5 space-y-2">
+                    {project.proof.map((item) => (
+                      <li key={item} className="impact-item text-xs">
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <div className="mt-3.5 flex flex-wrap gap-1.5">
+                    {project.stack.map((tech) => (
+                      <span key={tech} className="tech-pill">
                         {tech}
                       </span>
                     ))}
                   </div>
 
-                  {/* Action Buttons */}
-                  <div className="flex gap-3 mt-auto">
-                    <Button
-                      size="sm"
-                      className="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white"
-                      onClick={() => window.open(project.github, '_blank')}
-                    >
-                      <Eye className="mr-2 h-4 w-4" />
-                      View Details
-                    </Button>
+                  <div className="mt-auto pt-4 flex flex-wrap gap-2">
+                    {project.github && (
+                      <a className="action-link py-1.5 px-3 text-xs" href={project.github} target="_blank" rel="noopener noreferrer">
+                        <Github className="size-3.5" />
+                        GitHub
+                      </a>
+                    )}
+                    {project.demo && (
+                      <a className="action-link py-1.5 px-3 text-xs" href={project.demo} target="_blank" rel="noopener noreferrer">
+                        <ArrowUpRight className="size-3.5" />
+                        Live
+                      </a>
+                    )}
                   </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Call to Action */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center mt-16"
-        >
-          <p className="text-white/60 mb-6">
-            Want to see more of my work or collaborate on a project?
-          </p>
-          <Button
-            className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-3 rounded-full"
-            onClick={() => window.open('https://github.com/harshcode1?tab=repositories', '_blank')}
-          >
-            <Github className="mr-2 h-5 w-5" />
-            View All on GitHub
-          </Button>
-        </motion.div>
+              </motion.article>
+            ))}
+          </motion.div>
+        </AnimatePresence>
       </div>
     </section>
   )
 }
 
 export default ProjectsSection
-

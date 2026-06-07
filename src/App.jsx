@@ -1,354 +1,442 @@
-import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Moon, Sun, Menu, X, Github, Linkedin, Mail, Download, ExternalLink, ChevronDown } from 'lucide-react'
-import { Button } from '@/components/ui/button.jsx'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { motion } from 'framer-motion'
+import {
+  ArrowDown, BriefcaseBusiness, Download,
+  Github, Linkedin, Mail, MapPin, Menu, X
+} from 'lucide-react'
 import ExperienceSection from './components/ExperienceSection.jsx'
-import ProjectsSection from './components/ProjectsSection.jsx'
-import SkillsSection from './components/SkillsSection.jsx'
-import ContactSection from './components/ContactSection.jsx'
-import LoadingScreen from './components/LoadingScreen.jsx'
-import CustomCursor from './components/CustomCursor.jsx'
+import ProjectsSection  from './components/ProjectsSection.jsx'
+import SkillsSection    from './components/SkillsSection.jsx'
+import ContactSection   from './components/ContactSection.jsx'
 import './App.css'
 
-function App() {
-  const [darkMode, setDarkMode] = useState(true)
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [activeSection, setActiveSection] = useState('home')
-  const [isLoading, setIsLoading] = useState(true)
+const RESUME_URL = '/Harsh-Soni-Resume.pdf'
+
+const navItems = [
+  { id: 'home',       label: 'Home' },
+  { id: 'about',      label: 'About' },
+  { id: 'experience', label: 'Experience' },
+  { id: 'projects',   label: 'Projects' },
+  { id: 'skills',     label: 'Skills' },
+  { id: 'contact',    label: 'Contact' }
+]
+
+const ROLES = [
+  'AI Systems Engineer',
+  'Agentic Framework Builder',
+  'Full Stack Developer',
+  'Java · Spring Boot Dev'
+]
+
+/* ─── Typewriter hook ──────────────────────────────────────────────────── */
+function useTypewriter(words) {
+  const [text, setText] = useState('')
+  const timer = useRef(null)
 
   useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-    }
-  }, [darkMode])
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const sections = ['home', 'about', 'experience', 'projects', 'skills', 'contact']
-      const scrollPosition = window.scrollY + 100
-
-      for (const section of sections) {
-        const element = document.getElementById(section)
-        if (element) {
-          const offsetTop = element.offsetTop
-          const offsetHeight = element.offsetHeight
-          
-          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
-            setActiveSection(section)
-            break
-          }
-        }
+    let wIdx = 0, cIdx = 0, del = false
+    const tick = () => {
+      const word = words[wIdx]
+      if (!del) {
+        cIdx++
+        setText(word.slice(0, cIdx))
+        if (cIdx === word.length) { del = true; timer.current = setTimeout(tick, 2200); return }
+        timer.current = setTimeout(tick, 78)
+      } else {
+        cIdx--
+        setText(word.slice(0, cIdx))
+        if (cIdx === 0) { del = false; wIdx = (wIdx + 1) % words.length; timer.current = setTimeout(tick, 380); return }
+        timer.current = setTimeout(tick, 42)
       }
     }
+    timer.current = setTimeout(tick, 900)
+    return () => clearTimeout(timer.current)
+  }, [words])
 
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  return text
+}
 
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode)
-  }
-
-  const scrollToSection = (sectionId) => {
-    const element = document.getElementById(sectionId)
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' })
-    }
-    setMobileMenuOpen(false)
-  }
-
-  const navItems = [
-    { id: 'home', label: 'Home' },
-    { id: 'about', label: 'About' },
-    { id: 'experience', label: 'Experience' },
-    { id: 'projects', label: 'Projects' },
-    { id: 'skills', label: 'Skills' },
-    { id: 'contact', label: 'Contact' }
-  ]
-
+/* ─── Hero stat card ───────────────────────────────────────────────────── */
+function StatCard({ value, label }) {
   return (
-    <>
-      <AnimatePresence>
-        {isLoading && (
-          <LoadingScreen onLoadingComplete={() => setIsLoading(false)} />
-        )}
-      </AnimatePresence>
-
-      {!isLoading && (
-        <>
-          <CustomCursor />
-          <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 particle-bg">
-            {/* Navigation */}
-            <nav className="fixed top-0 w-full z-50 glass-card">
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between items-center py-4">
-                  <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="text-2xl font-bold text-white cursor-pointer hover-lift"
-                    onClick={() => scrollToSection('home')}
-                  >
-                    <span className="gradient-text">Harsh Soni</span>
-                  </motion.div>
-
-                  {/* Desktop Navigation */}
-                  <div className="hidden md:flex space-x-8">
-                    {navItems.map((item) => (
-                      <button
-                        key={item.id}
-                        onClick={() => scrollToSection(item.id)}
-                        className={`text-white/80 hover:text-white transition-colors relative hover-lift ${
-                          activeSection === item.id ? 'text-purple-400' : ''
-                        }`}
-                      >
-                        {item.label}
-                        {activeSection === item.id && (
-                          <motion.div
-                            layoutId="activeSection"
-                            className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-purple-600 to-blue-600"
-                          />
-                        )}
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* Mobile Menu */}
-                  <div className="flex items-center space-x-4">
-                    {/* Theme toggle disabled - dark mode only */}
-                    {/* <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={toggleDarkMode}
-                      className="text-white hover:bg-white/10 hover-lift"
-                    >
-                      {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-                    </Button> */}
-
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="md:hidden text-white hover:bg-white/10 hover-lift"
-                      onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                    >
-                      {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-                    </Button>
-                  </div>
-                </div>
-
-                {/* Mobile Navigation */}
-                {mobileMenuOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="md:hidden py-4 border-t border-white/10"
-                  >
-                    {navItems.map((item) => (
-                      <button
-                        key={item.id}
-                        onClick={() => scrollToSection(item.id)}
-                        className={`block w-full text-left py-2 text-white/80 hover:text-white transition-colors hover-lift ${
-                          activeSection === item.id ? 'text-purple-400' : ''
-                        }`}
-                      >
-                        {item.label}
-                      </button>
-                    ))}
-                  </motion.div>
-                )}
-              </div>
-            </nav>
-
-            {/* Hero Section */}
-            <section id="home" className="min-h-screen flex items-center justify-center px-4 pt-20">
-              <div className="max-w-4xl mx-auto text-center">
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8 }}
-                  className="space-y-6"
-                >
-                  <div className="relative">
-                    <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full blur-3xl opacity-20 animate-pulse"></div>
-                    <img
-                      src="/profile.jpg"
-                      alt="Harsh Soni"
-                      className="relative w-32 h-32 mx-auto rounded-full border-4 border-purple-500/50 float-animation object-cover"
-                    />
-                  </div>
-
-                  <h1 className="text-5xl md:text-7xl font-bold text-white">
-                    Hi, I'm{' '}
-                    <span className="gradient-text">
-                      Harsh Soni
-                    </span>
-                  </h1>
-
-                  <p className="text-xl md:text-2xl text-white/80 max-w-2xl mx-auto">
-                    Full Stack Developer & Software Engineer
-                  </p>
-
-                  <p className="text-lg text-white/60 max-w-3xl mx-auto leading-relaxed">
-                    Passionate about creating innovative web applications with modern technologies. 
-                    Experienced in Java, React, Next.js, and cloud technologies.
-                  </p>
-
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8">
-                    <Button
-                      onClick={() => scrollToSection('contact')}
-                      className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-3 rounded-full text-lg hover-lift glow-animation"
-                    >
-                      Get In Touch
-                    </Button>
-
-                    <Button
-                      variant="outline"
-                      className="border-white/20 text-white hover:bg-white/10 px-8 py-3 rounded-full text-lg hover-lift"
-                      onClick={() => window.open('https://drive.google.com/file/d/1y-E6tCk_HBt3mWfU-k93Eycxk7crkUdm/view', '_blank')}
-                    >
-                      <Download className="mr-2 h-5 w-5" />
-                      Download Resume
-                    </Button>
-                  </div>
-
-                  <div className="flex justify-center space-x-6 pt-8">
-                    <a
-                      href="https://github.com/harshcode1"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-white/60 hover:text-white transition-colors hover-lift cursor-pointer"
-                      title="GitHub Profile"
-                    >
-                      <Github className="h-6 w-6" />
-                    </a>
-                    <a
-                      href="https://linkedin.com/in/harsh-soni-885651221"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-white/60 hover:text-white transition-colors hover-lift cursor-pointer"
-                      title="LinkedIn Profile"
-                    >
-                      <Linkedin className="h-6 w-6" />
-                    </a>
-                    <a
-                      href="mailto:harsh9995soni@gmail.com"
-                      className="text-white/60 hover:text-white transition-colors hover-lift cursor-pointer"
-                      title="Send Email"
-                    >
-                      <Mail className="h-6 w-6" />
-                    </a>
-                  </div>
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 1, duration: 1 }}
-                  className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-                >
-                  <ChevronDown 
-                    className="h-8 w-8 text-white/60 animate-bounce cursor-pointer hover-lift" 
-                    onClick={() => scrollToSection('about')} 
-                  />
-                </motion.div>
-              </div>
-            </section>
-
-            {/* About Section */}
-            <section id="about" className="py-20 px-4">
-              <div className="max-w-6xl mx-auto">
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8 }}
-                  className="text-center mb-16"
-                >
-                  <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">About Me</h2>
-                  <div className="w-24 h-1 bg-gradient-to-r from-purple-600 to-blue-600 mx-auto"></div>
-                </motion.div>
-
-                <div className="grid md:grid-cols-2 gap-12 items-center">
-                  <motion.div
-                    initial={{ opacity: 0, x: -30 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.8 }}
-                    className="space-y-6"
-                  >
-                    <div className="glass-card glass-card-hover rounded-2xl p-8">
-                      <h3 className="text-2xl font-semibold text-white mb-4">My Journey</h3>
-                      <p className="text-white/80 leading-relaxed mb-4">
-                        I'm a Computer Science graduate from The NorthCap University with a CGPA of 8.53, 
-                        passionate about full-stack development and software engineering.
-                      </p>
-                      <p className="text-white/80 leading-relaxed mb-4">
-                        Currently working as a Software Engineer Intern at Nagarro, where I develop 
-                        Java applications using Spring Boot and implement CI/CD pipelines.
-                      </p>
-                      <p className="text-white/80 leading-relaxed">
-                        I've achieved Specialist rank on CodeForces and solved 500+ DSA problems, 
-                        demonstrating my strong algorithmic thinking and problem-solving skills.
-                      </p>
-                    </div>
-                  </motion.div>
-
-                  <motion.div
-                    initial={{ opacity: 0, x: 30 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.8 }}
-                    className="space-y-6"
-                  >
-                    <div className="glass-card glass-card-hover rounded-2xl p-8">
-                      <h3 className="text-2xl font-semibold text-white mb-6">Education & Achievements</h3>
-                      <div className="space-y-4">
-                        <div>
-                          <h4 className="text-lg font-medium text-purple-400">The NorthCap University</h4>
-                          <p className="text-white/80">B.Tech Computer Science (2021-2025) - Graduated</p>
-                          <p className="text-white/60">CGPA: 8.53</p>
-                        </div>
-                        <div>
-                          <h4 className="text-lg font-medium text-purple-400">Amazon ML Summer School</h4>
-                          <p className="text-white/80">Selected from thousands of applicants</p>
-                          <p className="text-white/60">Advanced ML training program</p>
-                        </div>
-                        <div>
-                          <h4 className="text-lg font-medium text-purple-400">Certifications</h4>
-                          <p className="text-white/80">AWS Academy Cloud Developing</p>
-                          <p className="text-white/80">AWS Academy Cloud Foundations</p>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                </div>
-              </div>
-            </section>
-
-            {/* Experience Section */}
-            <ExperienceSection />
-
-            {/* Projects Section */}
-            <ProjectsSection />
-
-            {/* Skills Section */}
-            <SkillsSection />
-
-            {/* Contact Section */}
-            <ContactSection />
-
-            {/* Footer */}
-            <footer className="py-8 px-4 border-t border-white/10">
-              <div className="max-w-6xl mx-auto text-center">
-                <p className="text-white/60">
-                  © 2025 Harsh Soni. Built with React, Tailwind CSS, and Framer Motion.
-                </p>
-              </div>
-            </footer>
-          </div>
-        </>
-      )}
-    </>
+    <div className="rounded-xl border border-white/[0.07] bg-white/[0.03] px-3.5 py-2.5 text-center backdrop-blur-sm">
+      <p className="text-sm font-bold text-white">{value}</p>
+      <p className="mt-0.5 text-[11px] text-white/40 leading-tight">{label}</p>
+    </div>
   )
 }
 
-export default App
+/* ─── About card ───────────────────────────────────────────────────────── */
+function AboutCard({ children, className = '' }) {
+  return (
+    <motion.article
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-70px' }}
+      transition={{ duration: 0.52, ease: [0.25, 0.46, 0.45, 0.94] }}
+      className={`card card-pad ${className}`}
+    >
+      {children}
+    </motion.article>
+  )
+}
 
+export default function App() {
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const [activeSection, setActiveSection] = useState('home')
+  const [scrolled, setScrolled]   = useState(false)
+  const heroRef      = useRef(null)
+  const spotlightRef = useRef(null)
+  const role         = useTypewriter(ROLES)
+
+  /* dark mode */
+  useEffect(() => { document.documentElement.classList.add('dark') }, [])
+
+  /* scroll tracking */
+  useEffect(() => {
+    const onScroll = () => {
+      setScrolled(window.scrollY > 24)
+      const pos = window.scrollY + 120
+      for (const { id } of navItems) {
+        const el = document.getElementById(id)
+        if (!el) continue
+        if (pos >= el.offsetTop && pos < el.offsetTop + el.offsetHeight) {
+          setActiveSection(id)
+          break
+        }
+      }
+    }
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  /* mouse spotlight — direct DOM write, no React re-render on every move */
+  const onMouseMove = useCallback((e) => {
+    const rect = heroRef.current?.getBoundingClientRect()
+    const el   = spotlightRef.current
+    if (!rect || !el) return
+    el.style.left    = `${e.clientX - rect.left}px`
+    el.style.top     = `${e.clientY - rect.top}px`
+    el.style.opacity = '1'
+  }, [])
+
+  const onMouseLeave = useCallback(() => {
+    if (spotlightRef.current) spotlightRef.current.style.opacity = '0'
+  }, [])
+
+  const scrollTo = useCallback((id) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+    setMobileOpen(false)
+  }, [])
+
+  const stats = useMemo(() => [
+    { value: '19+',      label: 'AI agents · Phoenix OS' },
+    { value: '1600+',    label: 'Codeforces rating' },
+    { value: 'Top 5%',   label: 'Amazon ML School \'23' }
+  ], [])
+
+  return (
+    <div className="min-h-screen overflow-x-hidden bg-[#09091a] text-white">
+
+      {/* grain texture */}
+      <div className="noise-overlay" aria-hidden="true" />
+
+      {/* ── Navbar ─────────────────────────────────────────────────────── */}
+      <nav
+        className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+          scrolled
+            ? 'border-b border-white/[0.06] bg-[#09091a]/90 backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,.45)]'
+            : 'bg-transparent'
+        }`}
+      >
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3.5 sm:px-6">
+
+          <button type="button" onClick={() => scrollTo('home')} className="flex items-center gap-2.5" aria-label="Home">
+            <span
+              className="grid size-9 place-items-center rounded-lg text-sm font-bold text-cyan-300"
+              style={{ background: 'linear-gradient(135deg,rgba(34,211,238,.14),rgba(139,92,246,.14))', border: '1px solid rgba(34,211,238,.28)' }}
+            >
+              HS
+            </span>
+            <span className="hidden text-sm font-semibold text-white sm:block">Harsh Soni</span>
+          </button>
+
+          {/* desktop nav */}
+          <div className="hidden items-center gap-0.5 md:flex">
+            {navItems.map(({ id, label }) => (
+              <button
+                key={id} type="button"
+                onClick={() => scrollTo(id)}
+                className={`nav-link ${activeSection === id ? 'nav-link-active' : ''}`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+
+          {/* mobile hamburger */}
+          <button
+            type="button"
+            className="grid size-9 place-items-center rounded-lg border border-white/10 bg-white/4 md:hidden"
+            onClick={() => setMobileOpen(o => !o)}
+            aria-label="Toggle menu"
+          >
+            {mobileOpen ? <X className="size-4" /> : <Menu className="size-4" />}
+          </button>
+        </div>
+
+        {mobileOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="border-t border-white/[0.07] bg-[#09091a]/95 backdrop-blur-2xl px-4 py-2 md:hidden"
+          >
+            {navItems.map(({ id, label }) => (
+              <button
+                key={id} type="button"
+                onClick={() => scrollTo(id)}
+                className={`block w-full rounded-lg px-3 py-2.5 text-left text-sm font-medium ${activeSection === id ? 'bg-white/10 text-white' : 'text-white/55'}`}
+              >
+                {label}
+              </button>
+            ))}
+          </motion.div>
+        )}
+      </nav>
+
+      <main>
+        {/* ── Hero ───────────────────────────────────────────────────────── */}
+        <section
+          id="home"
+          ref={heroRef}
+          onMouseMove={onMouseMove}
+          onMouseLeave={onMouseLeave}
+          className="relative isolate flex min-h-screen flex-col justify-center overflow-hidden px-4 pt-20 sm:px-6 lg:px-8"
+        >
+          {/* background layers */}
+          <div className="hero-grid absolute inset-0 -z-20" />
+          <div className="hero-glow  absolute -z-10" style={{ top: '5%',  left: '-5%' }} />
+          <div className="hero-glow-2 absolute -z-10" style={{ top: '30%', right: '-8%' }} />
+
+          {/* mouse spotlight */}
+          <div
+            ref={spotlightRef}
+            className="hero-spotlight pointer-events-none absolute -z-10"
+            style={{ opacity: 0 }}
+          />
+
+          <div className="mx-auto w-full max-w-6xl">
+            <div className="grid items-center gap-10 lg:grid-cols-[1fr_auto]">
+
+              {/* ── Left: text content ── */}
+              <div className="max-w-2xl">
+
+                {/* badge */}
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/7 px-3.5 py-1.5 text-xs font-semibold text-emerald-200"
+                >
+                  <span className="avail-dot" />
+                  <BriefcaseBusiness className="size-3.5" />
+                  Software Engineer · Nagarro · Jan 2025 – Present
+                </motion.div>
+
+                {/* name */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.65, delay: 0.08 }}
+                >
+                  <p className="mb-1 text-lg font-medium text-white/45 sm:text-xl">Hi, I'm</p>
+                  <h1
+                    className="font-black tracking-tight text-white"
+                    style={{ fontSize: 'clamp(2.8rem,6.5vw,4.8rem)', lineHeight: 1.05, letterSpacing: '-.03em' }}
+                  >
+                    Harsh <span className="text-gradient">Soni</span>
+                    <span style={{ color: '#22d3ee' }}>.</span>
+                  </h1>
+                </motion.div>
+
+                {/* typewriter */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.4, delay: 0.22 }}
+                  className="mt-3 mb-5 flex items-center gap-2 text-base font-medium text-white/55 sm:text-lg"
+                >
+                  <span className="text-gradient-cyan font-semibold">{role}</span>
+                  <span className="tw-cursor" />
+                </motion.div>
+
+                {/* bio */}
+                <motion.p
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.55, delay: 0.3 }}
+                  className="mb-8 max-w-lg text-base leading-7 text-white/52"
+                >
+                  CS grad contributing to Phoenix OS — a Nagarro Ventures Studios agentic framework that makes
+                  AI copilots deterministic for enterprise code generation. I ship multi-agent systems,
+                  Spring Boot services, and React interfaces that teams rely on in production.
+                </motion.p>
+
+                {/* CTAs */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.38 }}
+                  className="mb-7 flex flex-wrap gap-3"
+                >
+                  <button type="button" onClick={() => scrollTo('projects')} className="btn-primary">
+                    View my work <ArrowDown className="size-4" />
+                  </button>
+                  <a href={RESUME_URL} target="_blank" rel="noopener noreferrer" className="btn-ghost">
+                    <Download className="size-4" /> Resume
+                  </a>
+                </motion.div>
+
+                {/* socials + location */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.4, delay: 0.5 }}
+                  className="flex flex-wrap items-center gap-3"
+                >
+                  <a className="social-btn" href="https://github.com/harshcode1" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                    <Github className="size-4" />
+                  </a>
+                  <a className="social-btn" href="https://linkedin.com/in/harsh-soni" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                    <Linkedin className="size-4" />
+                  </a>
+                  <a className="social-btn" href="mailto:harsh9995soni@gmail.com" aria-label="Email">
+                    <Mail className="size-4" />
+                  </a>
+                  <span className="flex items-center gap-1.5 text-xs text-white/35">
+                    <MapPin className="size-3.5" />
+                    Gurugram, India
+                  </span>
+                </motion.div>
+              </div>
+
+              {/* ── Right: circular photo + mini stats ── */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.92 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.7, delay: 0.15, ease: [0.25, 0.46, 0.45, 0.94] }}
+                className="flex flex-col items-center gap-5 lg:items-start"
+              >
+                {/* photo */}
+                <div className="profile-ring mx-auto lg:mx-0">
+                  <div className="profile-ring-inner">
+                    <img src="/profile.jpg" alt="Harsh Soni" />
+                  </div>
+                </div>
+
+                {/* stat chips */}
+                <div className="grid w-full max-w-[190px] gap-2 lg:w-auto">
+                  {stats.map(s => <StatCard key={s.label} {...s} />)}
+                </div>
+              </motion.div>
+
+            </div>
+
+            {/* scroll indicator */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 1 }}
+              className="mt-16 hidden justify-center md:flex"
+            >
+              <button
+                type="button"
+                onClick={() => scrollTo('about')}
+                className="flex flex-col items-center gap-2 text-white/25 transition hover:text-white/50"
+                aria-label="Scroll down"
+              >
+                <span className="text-xs tracking-widest uppercase font-medium">Scroll</span>
+                <motion.div
+                  animate={{ y: [0, 5, 0] }}
+                  transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
+                >
+                  <ArrowDown className="size-4" />
+                </motion.div>
+              </button>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* ── About ──────────────────────────────────────────────────────── */}
+        <section id="about" className="section-shell">
+          <div className="section-heading">
+            <p className="eyebrow">About</p>
+            <h2>A practical engineer with product instincts.</h2>
+            <p>
+              I like work that sits close to real users and real systems — APIs that stay reliable,
+              dashboards that make decisions easier, and CI/CD pipelines that help teams ship fast.
+            </p>
+          </div>
+
+          <div className="mx-auto grid max-w-6xl gap-4 lg:grid-cols-3">
+            <AboutCard className="lg:col-span-2">
+              <div className="skill-icon mb-4"><BriefcaseBusiness className="size-4" /></div>
+              <h3>What I bring</h3>
+              <p className="mt-2.5 text-sm leading-7">
+                Part of the team building Phoenix OS — a Nagarro Ventures Studios agentic framework
+                making AI copilots deterministic for enterprise code generation. At Nagarro I work on
+                multi-agent orchestration, AI-driven DevOps automation, Spring Boot service layers,
+                and React interfaces. Amazon ML Summer School alum (top 5% from 60K+ applicants).
+              </p>
+            </AboutCard>
+
+            <AboutCard>
+              <h3>Education</h3>
+              <div className="mt-3 space-y-1">
+                <p className="text-sm font-semibold text-white/85">B.Tech Computer Science</p>
+                <p className="text-sm text-white/45">The NorthCap University, Gurugram · 2021–2025</p>
+              </div>
+            </AboutCard>
+
+            <AboutCard>
+              <h3>Recognition</h3>
+              <p className="mt-2.5 text-sm leading-7">
+                Amazon ML Summer School '23 (selected from 60,000+), AWS Cloud Developing &
+                Foundations certified. Codeforces Specialist (top 15%) with 1600+ rating.
+              </p>
+            </AboutCard>
+
+            <AboutCard className="lg:col-span-2">
+              <h3>How I work</h3>
+              <p className="mt-2.5 text-sm leading-7">
+                AI-native development where agents are deterministic, not probabilistic. Readable code,
+                measurable outcomes, and systems that can be explained and improved. TDD compliance gates,
+                frozen artifact cascades, and clean APIs — non-negotiable in everything I ship.
+              </p>
+            </AboutCard>
+          </div>
+        </section>
+
+        <ExperienceSection />
+        <ProjectsSection />
+        <SkillsSection />
+        <ContactSection resumeUrl={RESUME_URL} />
+      </main>
+
+      {/* ── Footer ─────────────────────────────────────────────────────── */}
+      <footer className="border-t border-white/[0.06] px-4 py-8">
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 sm:flex-row">
+          <p className="text-xs text-white/28">
+            © 2026 Harsh Soni · Built with React, Vite & Framer Motion
+          </p>
+          <div className="flex items-center gap-2.5">
+            <a className="social-btn" href="https://github.com/harshcode1"    target="_blank" rel="noopener noreferrer" aria-label="GitHub"><Github className="size-3.5" /></a>
+            <a className="social-btn" href="https://linkedin.com/in/harsh-soni" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><Linkedin className="size-3.5" /></a>
+            <a className="social-btn" href="mailto:harsh9995soni@gmail.com" aria-label="Email"><Mail className="size-3.5" /></a>
+          </div>
+        </div>
+      </footer>
+    </div>
+  )
+}

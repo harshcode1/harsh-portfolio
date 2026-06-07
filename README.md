@@ -1,32 +1,36 @@
-# Harsh Soni - Portfolio Website
+# Harsh Soni Portfolio
 
-A modern, responsive portfolio website built with React, Vite, TailwindCSS, and Framer Motion.
+A focused, responsive portfolio built with React, Vite, Tailwind CSS, and Framer Motion.
 
-## 🚀 Features
+## What It Highlights
 
-- **Modern Design**: Dark theme with glassmorphism effects
-- **Responsive**: Works perfectly on all devices
-- **Interactive**: Smooth animations with Framer Motion
-- **Contact Form**: Fully functional contact form with EmailJS integration
-- **Fast**: Built with Vite for optimal performance
-- **SEO Optimized**: Proper meta tags and semantic HTML
+- Full-stack engineering experience across Java, Spring Boot, React, Next.js, and CI/CD.
+- Project case studies with concrete proof points instead of generic cards.
+- Fast single-page navigation with a restrained dark interface.
+- EmailJS-powered contact form with safe fallback behavior when environment variables are missing.
+- Production build and ESLint checks.
 
-## 🛠️ Technologies Used
+## Tech Stack
 
-- **Frontend**: React 19, Vite 6, JavaScript
-- **Styling**: TailwindCSS 4, Custom CSS animations
-- **UI Components**: Radix UI primitives
-- **Animations**: Framer Motion
-- **Form Handling**: React Hook Form
-- **Email Service**: EmailJS
-- **Icons**: Lucide React
+- React 18
+- Vite 6
+- Tailwind CSS 4
+- Framer Motion
+- EmailJS
+- Lucide React
 
-## 📧 EmailJS Setup
+## Getting Started
 
-1. Create an account at [EmailJS](https://www.emailjs.com/)
-2. Set up your email service (Gmail, Outlook, etc.)
-3. Create an email template
-4. Copy your credentials to `.env` file:
+```bash
+npm install
+npm run dev
+```
+
+Open `http://localhost:5173`.
+
+## Environment Variables
+
+Create `.env` from `.env.example` and add your EmailJS credentials:
 
 ```env
 VITE_EMAILJS_PUBLIC_KEY=your_public_key_here
@@ -34,90 +38,19 @@ VITE_EMAILJS_SERVICE_ID=your_service_id_here
 VITE_EMAILJS_TEMPLATE_ID=your_template_id_here
 ```
 
-## 🚀 Getting Started
+## Checks
 
-### Prerequisites
-- Node.js 18+ 
-- pnpm (recommended) or npm
-
-### Installation
-
-1. Clone the repository:
 ```bash
-git clone <repository-url>
-cd harsh-portfolio
+npm run build
+npm run lint
 ```
 
-2. Install dependencies:
-```bash
-pnpm install
-# or
-npm install
-```
+## Deployment
 
-3. Create environment file:
-```bash
-cp .env.example .env
-# Add your EmailJS credentials
-```
-
-4. Start development server:
-```bash
-pnpm dev
-# or
-npm run dev
-```
-
-5. Open http://localhost:5173 in your browser
-
-## 📦 Build for Production
+The app can be deployed to Vercel, Netlify, or any static host that supports Vite output.
 
 ```bash
-pnpm build
-# or
 npm run build
 ```
 
-The build files will be in the `dist` directory.
-
-## 🌐 Deployment
-
-### Vercel (Recommended)
-1. Install Vercel CLI: `npm i -g vercel`
-2. Run: `vercel`
-3. Add environment variables in Vercel dashboard
-
-### Netlify
-1. Build the project: `pnpm build`
-2. Drag and drop the `dist` folder to Netlify
-3. Add environment variables in Netlify dashboard
-
-### GitHub Pages
-1. Install gh-pages: `npm install --save-dev gh-pages`
-2. Add to package.json scripts:
-```json
-"deploy": "gh-pages -d dist"
-```
-3. Run: `npm run build && npm run deploy`
-
-## 📝 Environment Variables
-
-| Variable | Description |
-|----------|-------------|
-| `VITE_EMAILJS_PUBLIC_KEY` | Your EmailJS public key |
-| `VITE_EMAILJS_SERVICE_ID` | Your EmailJS service ID |
-| `VITE_EMAILJS_TEMPLATE_ID` | Your EmailJS template ID |
-
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
-
-## 📞 Contact
-
-- **Email**: harsh9995soni@gmail.com
-- **LinkedIn**: [harsh-soni-885651221](https://linkedin.com/in/harsh-soni-885651221)
-- **GitHub**: [harshcode1](https://github.com/harshcode1)
-
----
-
-Built with ❤️ by Harsh Soni
+The production files are emitted to `dist`.
