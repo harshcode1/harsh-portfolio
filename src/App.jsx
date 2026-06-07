@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion } from 'framer-motion'
 import {
   ArrowDown, BriefcaseBusiness, Download,
   Github, Linkedin, Mail, MapPin, Menu, X
@@ -22,10 +22,10 @@ const navItems = [
 ]
 
 const ROLES = [
-  'Full Stack Engineer',
-  'Java · Spring Boot Dev',
-  'React · Next.js Builder',
-  'DevOps Automation Expert'
+  'AI Systems Engineer',
+  'Agentic Framework Builder',
+  'Full Stack Developer',
+  'Java · Spring Boot Dev'
 ]
 
 /* ─── Typewriter hook ──────────────────────────────────────────────────── */
@@ -126,9 +126,9 @@ export default function App() {
   }, [])
 
   const stats = useMemo(() => [
-    { value: 'Nagarro',  label: 'Current employer' },
-    { value: '8.53',     label: 'CGPA · B.Tech CS' },
-    { value: '1600+',    label: 'Codeforces rating' }
+    { value: '19+',      label: 'AI agents · Phoenix OS' },
+    { value: '1600+',    label: 'Codeforces rating' },
+    { value: 'Top 5%',   label: 'Amazon ML School \'23' }
   ], [])
 
   return (
@@ -272,8 +272,9 @@ export default function App() {
                   transition={{ duration: 0.55, delay: 0.3 }}
                   className="mb-8 max-w-lg text-base leading-7 text-white/52"
                 >
-                  CS grad building production-grade Java Spring Boot services, React interfaces,
-                  and multi-cloud CI/CD automation. I care about code that's fast, readable, and ships.
+                  CS grad contributing to Phoenix OS — a Nagarro Ventures Studios agentic framework that makes
+                  AI copilots deterministic for enterprise code generation. I ship multi-agent systems,
+                  Spring Boot services, and React interfaces that teams rely on in production.
                 </motion.p>
 
                 {/* CTAs */}
@@ -377,10 +378,10 @@ export default function App() {
               <div className="skill-icon mb-4"><BriefcaseBusiness className="size-4" /></div>
               <h3>What I bring</h3>
               <p className="mt-2.5 text-sm leading-7">
-                Java backend development, full-stack product building, and competitive programming.
-                At Nagarro I work on Spring Boot service layers, React components, TDD compliance
-                systems, and multi-cloud DevOps automation. Side projects include a mental health
-                platform, real-time chat app, and a crypto simulator with measurable performance wins.
+                Part of the team building Phoenix OS — a Nagarro Ventures Studios agentic framework
+                making AI copilots deterministic for enterprise code generation. At Nagarro I work on
+                multi-agent orchestration, AI-driven DevOps automation, Spring Boot service layers,
+                and React interfaces. Amazon ML Summer School alum (top 5% from 60K+ applicants).
               </p>
             </AboutCard>
 
@@ -388,9 +389,7 @@ export default function App() {
               <h3>Education</h3>
               <div className="mt-3 space-y-1">
                 <p className="text-sm font-semibold text-white/85">B.Tech Computer Science</p>
-                <p className="text-sm text-white/55">The NorthCap University, Gurugram</p>
-                <p className="text-sm text-white/55">2021 – 2025</p>
-                <p className="mt-2 text-lg font-black text-gradient-cyan leading-none">8.53 CGPA</p>
+                <p className="text-sm text-white/45">The NorthCap University, Gurugram · 2021–2025</p>
               </div>
             </AboutCard>
 
@@ -405,9 +404,9 @@ export default function App() {
             <AboutCard className="lg:col-span-2">
               <h3>How I work</h3>
               <p className="mt-2.5 text-sm leading-7">
-                Readable code, measurable outcomes, interfaces that don't make users think harder
-                than necessary. I prefer simple systems that can be explained, tested, and improved
-                over clever complexity. TDD, clean APIs, and documentation are non-negotiable.
+                AI-native development where agents are deterministic, not probabilistic. Readable code,
+                measurable outcomes, and systems that can be explained and improved. TDD compliance gates,
+                frozen artifact cascades, and clean APIs — non-negotiable in everything I ship.
               </p>
             </AboutCard>
           </div>

@@ -1,71 +1,33 @@
-# Deployment Checklist
+# Deployment Notes
 
-## ✅ Pre-Deployment Checklist
+## Pre-Deployment
 
-### Environment Setup
-- [x] EmailJS account created and configured
-- [x] Environment variables added to `.env`
-- [x] Gmail API connected (service_y500q4o)
-- [x] Email template created (template_c5pdpdf)
-- [x] Public key configured (yUlNvi81MPL7XI1wt)
+- Run `npm run build`.
+- Run `npm run lint`.
+- Confirm the latest resume link is correct.
+- Add EmailJS environment variables in the deployment provider.
+- Test the contact form on the deployed URL.
 
-### Build & Testing
-- [x] Dependencies installed successfully
-- [x] Production build completed without errors
-- [x] Development server runs correctly
-- [x] Contact form functional with EmailJS
-- [x] All components load without errors
-- [x] Mobile responsive design verified
+## Vercel
 
-### Production Ready
-- [x] Final bundle size optimized (383KB JS, 120KB CSS)
-- [x] Environment variables documented
-- [x] README.md created with setup instructions
-- [x] .env.example file created
-- [x] No TypeScript errors
-- [x] No console errors in production build
+1. Import the repository.
+2. Use the default Vite build settings.
+3. Add the EmailJS variables in Project Settings.
+4. Deploy.
 
-## 🚀 Deployment Options
+## Netlify
 
-### Option 1: Vercel (Recommended)
-```bash
-npm i -g vercel
-vercel
+1. Set build command to `npm run build`.
+2. Set publish directory to `dist`.
+3. Add the EmailJS variables in Site Settings.
+4. Deploy.
+
+## Required Environment Variables
+
+```env
+VITE_EMAILJS_PUBLIC_KEY=your_public_key_here
+VITE_EMAILJS_SERVICE_ID=your_service_id_here
+VITE_EMAILJS_TEMPLATE_ID=your_template_id_here
 ```
-Add environment variables in Vercel dashboard.
 
-### Option 2: Netlify
-1. Build: `pnpm build`
-2. Upload `dist` folder to Netlify
-3. Add environment variables in settings
-
-### Option 3: GitHub Pages
-1. Install: `npm install --save-dev gh-pages`
-2. Add script: `"deploy": "gh-pages -d dist"`
-3. Deploy: `npm run build && npm run deploy`
-
-## 📧 Post-Deployment Testing
-
-1. **Contact Form Test**:
-   - Fill out contact form on live site
-   - Verify email received at hrt070700@gmail.com
-   - Check success/error messages display
-
-2. **Performance Check**:
-   - Test loading speed
-   - Verify mobile responsiveness
-   - Check all navigation links work
-
-3. **SEO Verification**:
-   - Verify meta tags load correctly
-   - Test social media sharing
-
-## 🔗 Live URLs
-- Development: http://localhost:5174
-- Production: [Add your deployed URL here]
-
-## 📊 Build Stats
-- Bundle Size: 383.21 kB (119.54 kB gzipped)
-- CSS Size: 120.06 kB (18.37 kB gzipped)
-- Total Dependencies: 377 packages
-- Build Time: ~13 seconds
+Do not commit real service IDs, template IDs, public keys, or private credentials to the repository.

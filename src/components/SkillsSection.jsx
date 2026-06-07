@@ -1,12 +1,17 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
-import { Brain, Cloud, Code2, Database, GitBranch, ShieldCheck } from 'lucide-react'
+import { Bot, Brain, Code2, Database, GitBranch, ShieldCheck } from 'lucide-react'
 
 const skillGroups = [
   {
+    title: 'AI & Agentic Systems',
+    icon: Bot,
+    skills: ['Multi-agent Orchestration', 'LLM Integration', 'Agentic Workflows', 'Prompt Engineering', 'Anthropic SDK', 'Phoenix OS', 'Deterministic AI']
+  },
+  {
     title: 'Backend Engineering',
     icon: Code2,
-    skills: ['Java', 'Spring Boot', 'Spring Security', 'Hibernate', 'REST APIs', 'JUnit', 'Mockito']
+    skills: ['Java 8+', 'Spring Boot 3', 'Spring Security', 'Hibernate', 'REST APIs', 'JUnit', 'Mockito']
   },
   {
     title: 'Frontend',
@@ -19,14 +24,9 @@ const skillGroups = [
     skills: ['MySQL', 'MongoDB', 'SQL', 'Schema Design', 'JWT', 'OAuth 2.0']
   },
   {
-    title: 'DevOps & CI/CD',
+    title: 'DevOps & Cloud',
     icon: GitBranch,
-    skills: ['Docker', 'Jenkins', 'SonarQube', 'GitHub Actions', 'CI/CD', 'TDD', 'Git']
-  },
-  {
-    title: 'Cloud Platforms',
-    icon: Cloud,
-    skills: ['Azure', 'AWS', 'GCP', 'DevSecOps', 'Postman', 'IntelliJ IDEA']
+    skills: ['Docker', 'GitHub Actions', 'Jenkins', 'SonarQube', 'Azure', 'AWS', 'GCP', 'CI/CD', 'DevSecOps', 'TDD']
   },
   {
     title: 'CS Foundations',
@@ -36,14 +36,14 @@ const skillGroups = [
 ]
 
 /* Two marquee rows with different speeds + directions */
-const ROW_1 = ['Java', 'Spring Boot', 'React.js', 'Next.js 14', 'TypeScript', 'Node.js', 'Docker', 'AWS', 'Azure', 'GCP', 'MySQL', 'MongoDB', 'JWT', 'OAuth 2.0', 'Spring Security']
-const ROW_2 = ['TDD', 'JUnit', 'Mockito', 'CI/CD', 'GitHub Actions', 'Jenkins', 'SonarQube', 'System Design', 'Microservices', 'DSA', 'REST API', 'Tailwind CSS', 'Express.js', 'Hibernate']
+const ROW_1 = ['Multi-agent AI', 'Phoenix OS', 'LLM Orchestration', 'Java', 'Spring Boot', 'React.js', 'Next.js 14', 'TypeScript', 'Node.js', 'Docker', 'AWS', 'Azure', 'GCP', 'Anthropic SDK', 'Spring Security']
+const ROW_2 = ['Agentic Workflows', 'Prompt Engineering', 'TDD', 'JUnit', 'Mockito', 'CI/CD', 'GitHub Actions', 'SonarQube', 'System Design', 'Microservices', 'DSA', 'Tailwind CSS', 'DevSecOps', 'Hibernate']
 
 const COUNTERS = [
-  { end: 60,  suffix: 'K+', label: 'ML School applicants\nscreened from' },
-  { end: 500, suffix: '+',  label: 'DSA problems\nsolved' },
-  { end: 1600, suffix: '+', label: 'Codeforces\nrating' },
-  { end: 85,  suffix: '%',  label: 'frontend handoff\ntime cut' }
+  { end: 19,   suffix: '+',  label: 'Phoenix OS\nagents built' },
+  { end: 85,   suffix: '%',  label: 'frontend handoff\ntime cut' },
+  { end: 1600, suffix: '+',  label: 'Codeforces\nrating' },
+  { end: 500,  suffix: '+',  label: 'DSA problems\nsolved' }
 ]
 
 function Counter({ end, suffix, duration = 1800 }) {
@@ -67,7 +67,7 @@ function Counter({ end, suffix, duration = 1800 }) {
     return () => clearInterval(t)
   }, [inView, end, duration])
 
-  const display = end >= 1000 ? `${(count / 1000).toFixed(count % 1000 === 0 ? 0 : 0)}K` : count
+  const display = end >= 10000 ? `${Math.round(count / 1000)}K` : count
 
   return <span ref={ref}>{display}{suffix}</span>
 }
@@ -85,10 +85,10 @@ export default function SkillsSection() {
     <section id="skills" className="section-shell">
       <div className="section-heading">
         <p className="eyebrow">Skills</p>
-        <h2>A stack built for production delivery.</h2>
+        <h2>AI-native stack built for production delivery.</h2>
         <p>
-          Backend depth, frontend execution, cloud deployment, and algorithmic problem-solving —
-          combined into a stack that ships things that work.
+          Multi-agent orchestration, backend depth, frontend execution, and cloud deployment —
+          combined into a stack that ships AI systems and software that actually works.
         </p>
       </div>
 
@@ -157,16 +157,16 @@ export default function SkillsSection() {
       <div className="mx-auto mt-8 grid max-w-6xl gap-4 lg:grid-cols-2">
         {[
           {
-            title: 'Competitive programming',
-            body: 'Codeforces Specialist (top 15% globally) with 1600+ rating. 500+ problems across platforms — keeps algorithmic fundamentals and complexity analysis sharp under pressure.'
+            title: 'Phoenix OS & Agentic AI',
+            body: 'Contributor to Phoenix OS (Nagarro Ventures Studios) — an agentic framework featuring 19 specialized agents, a 62-file LTM memory system, and deterministic AI output via frozen artifact cascades. Hands-on with multi-agent orchestration, LLM tool-calling, and enterprise-grade prompt pipelines.'
           },
           {
-            title: 'Certifications',
+            title: 'Achievements & Certifications',
             bullets: [
-              'Amazon ML Summer School \'23 — selected from 60,000+ (~5% acceptance)',
+              'Amazon ML Summer School \'23 — selected from 60,000+ applicants (~5% acceptance)',
               'AWS Academy Cloud Developing',
               'AWS Academy Cloud Foundations',
-              'Codeforces Specialist rank — 1600+ rating'
+              'Codeforces Specialist (top 15% globally) — 1600+ rating, 500+ problems solved'
             ]
           }
         ].map((item, i) => (

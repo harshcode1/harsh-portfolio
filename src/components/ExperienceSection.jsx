@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { motion, useScroll, useSpring, useTransform } from 'framer-motion'
+import { motion, useScroll, useSpring } from 'framer-motion'
 import { Calendar, MapPin } from 'lucide-react'
 
 const experiences = [
@@ -9,15 +9,15 @@ const experiences = [
     location: 'Gurugram',
     period: 'Jan 2025 – Present',
     current: true,
-    summary: 'Building Spring Boot service layers, React components, TDD systems, and multi-cloud DevOps automation on enterprise-scale platforms.',
+    summary: 'Contributing to Phoenix OS — Nagarro Ventures Studios\' agentic framework for spec-driven development — while shipping Spring Boot services, React interfaces, and AI-driven DevOps automation at enterprise scale.',
     impact: [
-      'Spring Boot service layers in Phoenix OS using Java 8+ (streams, lambdas, Optional); JUnit + Mockito test suites for mandatory TDD compliance gates.',
-      'Context Retention System with strict TDD gates — mandatory interface definitions and Red Phase tests before implementation via automated compliance checks.',
-      'Atomic React.js components with reusable Tailwind design tokens; structured code reviews cut frontend handoff time by 85%.',
-      'DevOps Orchestration Agent automating multi-cloud CI/CD (Azure / AWS / GCP) — generates 30+ config files with integrated DevSecOps safeguards.',
-      'Enhanced iLease (Erste Bank FinTech) by optimising Spring Boot microservices; improved high-volume transaction throughput by 15%.'
+      'Contributing to Phoenix OS (Nagarro Ventures Studios) — a multi-agent framework with 19 specialized agents and 21+ orchestration commands that makes AI copilots deterministic for enterprise code generation.',
+      'Engineered the Context Retention System — Phoenix OS\'s Long-Term Memory (LTM) module — managing 62 accumulated pattern/standard files with automated TDD Quality Gates enforcing Red Phase compliance checks.',
+      'Built the DevOps Orchestration Agent (DevXopsGuardian) generating 29–47 multi-cloud CI/CD config files (GitHub Actions, Azure DevOps, GitLab CI, Jenkins) with integrated DevSecOps safeguards — 2-day setup reduced to ~15 min.',
+      'Built Atomic React.js components with reusable Tailwind design tokens; structured code reviews cut frontend handoff time by 85%.',
+      'Enhanced iLease (Erste Bank FinTech) by optimising Spring Boot microservices and multi-threaded modules — 15% improvement in high-volume transaction throughput.'
     ],
-    stack: ['Java 8+', 'Spring Boot', 'Spring Security', 'React.js', 'Tailwind CSS', 'JUnit', 'Mockito', 'Azure', 'AWS', 'GCP', 'TDD']
+    stack: ['Multi-agent Systems', 'LLM Orchestration', 'Java 8+', 'Spring Boot', 'React.js', 'TDD', 'JUnit', 'Mockito', 'Azure', 'AWS', 'GCP', 'Anthropic SDK']
   },
   {
     title: 'Full Stack Intern',
@@ -65,10 +65,10 @@ export default function ExperienceSection() {
     <section id="experience" ref={sectionRef} className="section-shell">
       <div className="section-heading">
         <p className="eyebrow">Experience</p>
-        <h2>Engineering roles with measurable outcomes.</h2>
+        <h2>Engineering roles — AI systems to enterprise backends.</h2>
         <p>
-          A timeline of positions where I shipped backend services, product interfaces, performance
-          improvements, and quality automation — all with real, quantified impact.
+          A timeline of positions where I contributed to agentic frameworks, shipped backend services,
+          automated CI/CD pipelines, and built product interfaces — all with quantified impact.
         </p>
       </div>
 

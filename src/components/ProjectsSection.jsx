@@ -138,7 +138,7 @@ const ProjectsSection = () => {
         </p>
       </div>
 
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto max-w-6xl">
         {/* filter tabs */}
         <div className="mb-8 flex flex-wrap justify-center gap-2">
           {filters.map((filter) => (
@@ -222,11 +222,13 @@ const ProjectsSection = () => {
                     ))}
                   </div>
 
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    <a className="action-link py-1.5 px-3 text-xs" href={project.github} target="_blank" rel="noopener noreferrer">
-                      <Github className="size-3.5" />
-                      GitHub
-                    </a>
+                  <div className="mt-auto pt-4 flex flex-wrap gap-2">
+                    {project.github && (
+                      <a className="action-link py-1.5 px-3 text-xs" href={project.github} target="_blank" rel="noopener noreferrer">
+                        <Github className="size-3.5" />
+                        GitHub
+                      </a>
+                    )}
                     {project.demo && (
                       <a className="action-link py-1.5 px-3 text-xs" href={project.demo} target="_blank" rel="noopener noreferrer">
                         <ArrowUpRight className="size-3.5" />
