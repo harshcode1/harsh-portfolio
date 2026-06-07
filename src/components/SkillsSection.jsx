@@ -6,203 +6,188 @@ const skillGroups = [
   {
     title: 'Backend Engineering',
     icon: Code2,
-    color: 'cyan',
     skills: ['Java', 'Spring Boot', 'Spring Security', 'Hibernate', 'REST APIs', 'JUnit', 'Mockito']
   },
   {
-    title: 'Frontend Product Work',
+    title: 'Frontend',
     icon: Brain,
-    color: 'purple',
     skills: ['React.js', 'Next.js 14', 'JavaScript ES6+', 'TypeScript', 'Tailwind CSS', 'Node.js', 'Express.js']
   },
   {
     title: 'Data & Persistence',
     icon: Database,
-    color: 'blue',
-    skills: ['MySQL', 'MongoDB', 'SQL', 'Schema Design', 'Query Optimisation', 'JWT', 'OAuth 2.0']
+    skills: ['MySQL', 'MongoDB', 'SQL', 'Schema Design', 'JWT', 'OAuth 2.0']
   },
   {
-    title: 'Delivery & Quality',
+    title: 'DevOps & CI/CD',
     icon: GitBranch,
-    color: 'emerald',
-    skills: ['Git', 'Docker', 'Jenkins', 'SonarQube', 'GitHub Actions', 'CI/CD', 'TDD']
+    skills: ['Docker', 'Jenkins', 'SonarQube', 'GitHub Actions', 'CI/CD', 'TDD', 'Git']
   },
   {
-    title: 'Cloud & Platforms',
+    title: 'Cloud Platforms',
     icon: Cloud,
-    color: 'indigo',
     skills: ['Azure', 'AWS', 'GCP', 'DevSecOps', 'Postman', 'IntelliJ IDEA']
   },
   {
     title: 'CS Foundations',
     icon: ShieldCheck,
-    color: 'violet',
-    skills: ['System Design', 'Microservices', 'OOP', 'DSA', 'Operating Systems', 'DBMS', 'Distributed Systems', 'Computer Networks']
+    skills: ['System Design', 'Microservices', 'OOP', 'DSA', 'Operating Systems', 'DBMS', 'Distributed Systems']
   }
 ]
 
+/* Two marquee rows with different speeds + directions */
+const ROW_1 = ['Java', 'Spring Boot', 'React.js', 'Next.js 14', 'TypeScript', 'Node.js', 'Docker', 'AWS', 'Azure', 'GCP', 'MySQL', 'MongoDB', 'JWT', 'OAuth 2.0', 'Spring Security']
+const ROW_2 = ['TDD', 'JUnit', 'Mockito', 'CI/CD', 'GitHub Actions', 'Jenkins', 'SonarQube', 'System Design', 'Microservices', 'DSA', 'REST API', 'Tailwind CSS', 'Express.js', 'Hibernate']
+
 const COUNTERS = [
-  { end: 60000, suffix: '+', label: 'ML Summer School\napplicants screened from', prefix: '' },
-  { end: 500, suffix: '+', label: 'DSA problems\nsolved on major platforms', prefix: '' },
-  { end: 1600, suffix: '+', label: 'Codeforces rating\n(Specialist rank, top 15%)', prefix: '' },
-  { end: 85, suffix: '%', label: 'reduction in frontend\nhandoff time at Nagarro', prefix: '' }
+  { end: 60,  suffix: 'K+', label: 'ML School applicants\nscreened from' },
+  { end: 500, suffix: '+',  label: 'DSA problems\nsolved' },
+  { end: 1600, suffix: '+', label: 'Codeforces\nrating' },
+  { end: 85,  suffix: '%',  label: 'frontend handoff\ntime cut' }
 ]
 
-function AnimatedCounter({ end, suffix = '', duration = 2000 }) {
+function Counter({ end, suffix, duration = 1800 }) {
   const [count, setCount] = useState(0)
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: '-60px' })
-  const startedRef = useRef(false)
+  const inView = useInView(ref, { once: true, margin: '-50px' })
+  const started = useRef(false)
 
   useEffect(() => {
-    if (!isInView || startedRef.current) return
-    startedRef.current = true
-
-    const steps = 72
-    const increment = end / steps
+    if (!inView || started.current) return
+    started.current = true
+    const steps = 60
+    const step = end / steps
     const interval = duration / steps
-    let current = 0
-
-    const timer = setInterval(() => {
-      current += increment
-      if (current >= end) {
-        setCount(end)
-        clearInterval(timer)
-      } else {
-        setCount(Math.floor(current))
-      }
+    let cur = 0
+    const t = setInterval(() => {
+      cur += step
+      if (cur >= end) { setCount(end); clearInterval(t) }
+      else setCount(Math.floor(cur))
     }, interval)
+    return () => clearInterval(t)
+  }, [inView, end, duration])
 
-    return () => clearInterval(timer)
-  }, [isInView, end, duration])
+  const display = end >= 1000 ? `${(count / 1000).toFixed(count % 1000 === 0 ? 0 : 0)}K` : count
 
-  return (
-    <span ref={ref}>
-      {count >= 1000 ? (count / 1000).toFixed(count % 1000 === 0 ? 0 : 1) + 'K' : count.toLocaleString()}
-      {suffix}
-    </span>
-  )
+  return <span ref={ref}>{display}{suffix}</span>
 }
 
-const containerVariants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.07 } }
-}
 const cardVariants = {
-  hidden: { opacity: 0, y: 24 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] } }
+  hidden: { opacity: 0, y: 20 },
+  visible: (i) => ({
+    opacity: 1, y: 0,
+    transition: { duration: 0.48, delay: i * 0.07, ease: [0.25, 0.46, 0.45, 0.94] }
+  })
 }
 
-const SkillsSection = () => (
-  <section id="skills" className="section-shell">
-    <div className="section-heading">
-      <p className="eyebrow">Skills</p>
-      <h2>A stack shaped around reliable product delivery.</h2>
-      <p>
-        The real story isn't percentage bars — it's the combination of backend depth, frontend
-        execution, deployment awareness, and algorithmic problem-solving.
-      </p>
-    </div>
+export default function SkillsSection() {
+  return (
+    <section id="skills" className="section-shell">
+      <div className="section-heading">
+        <p className="eyebrow">Skills</p>
+        <h2>A stack built for production delivery.</h2>
+        <p>
+          Backend depth, frontend execution, cloud deployment, and algorithmic problem-solving —
+          combined into a stack that ships things that work.
+        </p>
+      </div>
 
-    {/* skill groups grid */}
-    <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: '-60px' }}
-      className="mx-auto grid max-w-7xl gap-5 md:grid-cols-2 xl:grid-cols-3"
-    >
-      {skillGroups.map((group) => {
-        const Icon = group.icon
-        return (
-          <motion.article key={group.title} variants={cardVariants} className="feature-card">
-            <div className="mb-5 flex items-center gap-3">
-              <span className="skill-icon-wrap">
-                <Icon className="size-5" />
-              </span>
-              <h3 className="text-base">{group.title}</h3>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {group.skills.map((skill) => (
-                <span key={skill} className="tech-pill">
-                  {skill}
-                </span>
-              ))}
-            </div>
-          </motion.article>
-        )
-      })}
-    </motion.div>
-
-    {/* animated counters */}
-    <div className="mx-auto mt-12 max-w-7xl">
-      <motion.p
-        initial={{ opacity: 0, y: 16 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5 }}
-        className="eyebrow mb-6 text-center"
-      >
-        By the numbers
-      </motion.p>
+      {/* skill group cards */}
       <motion.div
-        variants={containerVariants}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: '-60px' }}
-        className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4"
+        viewport={{ once: true, margin: '-50px' }}
+        className="mx-auto grid max-w-6xl gap-4 sm:grid-cols-2 xl:grid-cols-3"
       >
-        {COUNTERS.map((c) => (
-          <motion.div key={c.label} variants={cardVariants} className="counter-card">
-            <div className="counter-value">
-              <AnimatedCounter end={c.end} suffix={c.suffix} />
-            </div>
-            <p className="counter-label whitespace-pre-line">{c.label}</p>
+        {skillGroups.map((group, i) => {
+          const Icon = group.icon
+          return (
+            <motion.div key={group.title} custom={i} variants={cardVariants} className="card card-pad">
+              <div className="mb-4 flex items-center gap-3">
+                <span className="skill-icon"><Icon className="size-4" /></span>
+                <h3 className="text-sm font-bold">{group.title}</h3>
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {group.skills.map(s => <span key={s} className="tech-pill">{s}</span>)}
+              </div>
+            </motion.div>
+          )
+        })}
+      </motion.div>
+
+      {/* marquee rows */}
+      <div className="mx-auto mt-10 max-w-6xl space-y-3 overflow-hidden">
+        <div className="marquee-wrap">
+          <div className="marquee-track">
+            {[...ROW_1, ...ROW_1].map((s, i) => (
+              <span key={i} className="marquee-tag">{s}</span>
+            ))}
+          </div>
+        </div>
+        <div className="marquee-wrap">
+          <div className="marquee-track marquee-track-rev">
+            {[...ROW_2, ...ROW_2].map((s, i) => (
+              <span key={i} className="marquee-tag">{s}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* animated counters */}
+      <div className="mx-auto mt-12 max-w-6xl">
+        <p className="eyebrow mb-5 text-center">By the numbers</p>
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-50px' }}
+          className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4"
+        >
+          {COUNTERS.map((c, i) => (
+            <motion.div key={c.label} custom={i} variants={cardVariants} className="counter-card">
+              <div className="counter-num">
+                <Counter end={c.end} suffix={c.suffix} />
+              </div>
+              <p className="counter-label whitespace-pre-line">{c.label}</p>
+            </motion.div>
+          ))}
+        </motion.div>
+      </div>
+
+      {/* certs */}
+      <div className="mx-auto mt-8 grid max-w-6xl gap-4 lg:grid-cols-2">
+        {[
+          {
+            title: 'Competitive programming',
+            body: 'Codeforces Specialist (top 15% globally) with 1600+ rating. 500+ problems across platforms — keeps algorithmic fundamentals and complexity analysis sharp under pressure.'
+          },
+          {
+            title: 'Certifications',
+            bullets: [
+              'Amazon ML Summer School \'23 — selected from 60,000+ (~5% acceptance)',
+              'AWS Academy Cloud Developing',
+              'AWS Academy Cloud Foundations',
+              'Codeforces Specialist rank — 1600+ rating'
+            ]
+          }
+        ].map((item, i) => (
+          <motion.div
+            key={item.title}
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.48, delay: i * 0.08 }}
+            className="card card-pad"
+          >
+            <h3 className="text-sm font-bold">{item.title}</h3>
+            {item.body && <p className="mt-2.5 text-sm leading-6">{item.body}</p>}
+            {item.bullets && (
+              <ul className="mt-3 space-y-2">
+                {item.bullets.map(b => <li key={b} className="impact-item">{b}</li>)}
+              </ul>
+            )}
           </motion.div>
         ))}
-      </motion.div>
-    </div>
-
-    {/* certifications */}
-    <div className="mx-auto mt-8 grid max-w-7xl gap-5 lg:grid-cols-[0.85fr_1.15fr]">
-      <motion.article
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5 }}
-        className="feature-card"
-      >
-        <h3>Competitive programming</h3>
-        <p className="mt-3">
-          I use competitive programming to keep fundamentals sharp: decomposition, complexity
-          analysis, edge cases, and pressure-tested implementation. Codeforces Specialist (top 15%
-          globally) with 1600+ rating across 500+ problems.
-        </p>
-      </motion.article>
-
-      <motion.article
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5, delay: 0.08 }}
-        className="feature-card"
-      >
-        <h3>Certifications & recognition</h3>
-        <div className="mt-4 grid gap-3 sm:grid-cols-2">
-          {[
-            'Amazon ML Summer School \'23 — selected from 60,000+ applicants (~5% acceptance)',
-            'Codeforces Specialist rank — top 15% globally, 1600+ rating',
-            'AWS Academy Cloud Developing — certified cloud developer',
-            'AWS Academy Cloud Foundations — AWS core services certified'
-          ].map((item) => (
-            <p key={item} className="impact-item text-sm">
-              {item}
-            </p>
-          ))}
-        </div>
-      </motion.article>
-    </div>
-  </section>
-)
-
-export default SkillsSection
+      </div>
+    </section>
+  )
+}

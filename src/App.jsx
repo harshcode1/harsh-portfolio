@@ -1,200 +1,199 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { motion } from 'framer-motion'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import {
-  ArrowDown,
-  BriefcaseBusiness,
-  Download,
-  Github,
-  Linkedin,
-  Mail,
-  Menu,
-  X
+  ArrowDown, BriefcaseBusiness, Download,
+  Github, Linkedin, Mail, MapPin, Menu, X
 } from 'lucide-react'
 import ExperienceSection from './components/ExperienceSection.jsx'
-import ProjectsSection from './components/ProjectsSection.jsx'
-import SkillsSection from './components/SkillsSection.jsx'
-import ContactSection from './components/ContactSection.jsx'
+import ProjectsSection  from './components/ProjectsSection.jsx'
+import SkillsSection    from './components/SkillsSection.jsx'
+import ContactSection   from './components/ContactSection.jsx'
 import './App.css'
 
 const RESUME_URL = '/Harsh-Soni-Resume.pdf'
 
 const navItems = [
-  { id: 'home', label: 'Home' },
-  { id: 'about', label: 'About' },
+  { id: 'home',       label: 'Home' },
+  { id: 'about',      label: 'About' },
   { id: 'experience', label: 'Experience' },
-  { id: 'projects', label: 'Projects' },
-  { id: 'skills', label: 'Skills' },
-  { id: 'contact', label: 'Contact' }
+  { id: 'projects',   label: 'Projects' },
+  { id: 'skills',     label: 'Skills' },
+  { id: 'contact',    label: 'Contact' }
 ]
 
 const ROLES = [
   'Full Stack Engineer',
-  'Java & Spring Boot Dev',
-  'React & Next.js Builder',
+  'Java · Spring Boot Dev',
+  'React · Next.js Builder',
   'DevOps Automation Expert'
 ]
 
+/* ─── Typewriter hook ──────────────────────────────────────────────────── */
 function useTypewriter(words) {
   const [text, setText] = useState('')
-  const timerRef = useRef(null)
+  const timer = useRef(null)
 
   useEffect(() => {
-    let wordIdx = 0
-    let charIdx = 0
-    let deleting = false
-
+    let wIdx = 0, cIdx = 0, del = false
     const tick = () => {
-      const word = words[wordIdx]
-      if (!deleting) {
-        charIdx++
-        setText(word.slice(0, charIdx))
-        if (charIdx === word.length) {
-          deleting = true
-          timerRef.current = setTimeout(tick, 2400)
-          return
-        }
-        timerRef.current = setTimeout(tick, 82)
+      const word = words[wIdx]
+      if (!del) {
+        cIdx++
+        setText(word.slice(0, cIdx))
+        if (cIdx === word.length) { del = true; timer.current = setTimeout(tick, 2200); return }
+        timer.current = setTimeout(tick, 78)
       } else {
-        charIdx--
-        setText(word.slice(0, charIdx))
-        if (charIdx === 0) {
-          deleting = false
-          wordIdx = (wordIdx + 1) % words.length
-          timerRef.current = setTimeout(tick, 420)
-          return
-        }
-        timerRef.current = setTimeout(tick, 44)
+        cIdx--
+        setText(word.slice(0, cIdx))
+        if (cIdx === 0) { del = false; wIdx = (wIdx + 1) % words.length; timer.current = setTimeout(tick, 380); return }
+        timer.current = setTimeout(tick, 42)
       }
     }
-
-    timerRef.current = setTimeout(tick, 900)
-    return () => clearTimeout(timerRef.current)
+    timer.current = setTimeout(tick, 900)
+    return () => clearTimeout(timer.current)
   }, [words])
 
   return text
 }
 
-function App() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+/* ─── Hero stat card ───────────────────────────────────────────────────── */
+function StatCard({ value, label }) {
+  return (
+    <div className="rounded-xl border border-white/[0.07] bg-white/[0.03] px-3.5 py-2.5 text-center backdrop-blur-sm">
+      <p className="text-sm font-bold text-white">{value}</p>
+      <p className="mt-0.5 text-[11px] text-white/40 leading-tight">{label}</p>
+    </div>
+  )
+}
+
+/* ─── About card ───────────────────────────────────────────────────────── */
+function AboutCard({ children, className = '' }) {
+  return (
+    <motion.article
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-70px' }}
+      transition={{ duration: 0.52, ease: [0.25, 0.46, 0.45, 0.94] }}
+      className={`card card-pad ${className}`}
+    >
+      {children}
+    </motion.article>
+  )
+}
+
+export default function App() {
+  const [mobileOpen, setMobileOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('home')
-  const [scrolled, setScrolled] = useState(false)
-  const role = useTypewriter(ROLES)
+  const [scrolled, setScrolled]   = useState(false)
+  const [mouse, setMouse]         = useState({ x: -999, y: -999 })
+  const [spotOn, setSpotOn]       = useState(false)
+  const heroRef = useRef(null)
+  const role    = useTypewriter(ROLES)
 
-  useEffect(() => {
-    document.documentElement.classList.add('dark')
-  }, [])
+  /* dark mode */
+  useEffect(() => { document.documentElement.classList.add('dark') }, [])
 
+  /* scroll tracking */
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20)
-      const scrollPosition = window.scrollY + 120
-      for (const item of navItems) {
-        const element = document.getElementById(item.id)
-        if (!element) continue
-        const top = element.offsetTop
-        const bottom = top + element.offsetHeight
-        if (scrollPosition >= top && scrollPosition < bottom) {
-          setActiveSection(item.id)
+    const onScroll = () => {
+      setScrolled(window.scrollY > 24)
+      const pos = window.scrollY + 120
+      for (const { id } of navItems) {
+        const el = document.getElementById(id)
+        if (!el) continue
+        if (pos >= el.offsetTop && pos < el.offsetTop + el.offsetHeight) {
+          setActiveSection(id)
           break
         }
       }
     }
-    handleScroll()
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const highlights = useMemo(
-    () => [
-      { label: 'Current role', value: 'Software Engineer · Nagarro' },
-      { label: 'Competitive', value: 'Codeforces Specialist · 1600+ rating' },
-      { label: 'Stack', value: 'Java · Spring · React · Next.js · DevOps' }
-    ],
-    []
-  )
+  /* mouse spotlight */
+  const onMouseMove = useCallback((e) => {
+    const rect = heroRef.current?.getBoundingClientRect()
+    if (!rect) return
+    setMouse({ x: e.clientX - rect.left, y: e.clientY - rect.top })
+    setSpotOn(true)
+  }, [])
 
-  const scrollToSection = (sectionId) => {
-    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' })
-    setMobileMenuOpen(false)
-  }
+  const scrollTo = useCallback((id) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+    setMobileOpen(false)
+  }, [])
+
+  const stats = useMemo(() => [
+    { value: 'Nagarro',  label: 'Current employer' },
+    { value: '8.53',     label: 'CGPA · B.Tech CS' },
+    { value: '1600+',    label: 'Codeforces rating' }
+  ], [])
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-[#080c14] text-white">
+    <div className="min-h-screen overflow-x-hidden bg-[#09091a] text-white">
 
-      {/* ── Navbar ── */}
+      {/* grain texture */}
+      <div className="noise-overlay" aria-hidden="true" />
+
+      {/* ── Navbar ─────────────────────────────────────────────────────── */}
       <nav
         className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
           scrolled
-            ? 'border-b border-white/[0.07] bg-[#080c14]/90 backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,0.4)]'
+            ? 'border-b border-white/[0.06] bg-[#09091a]/90 backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,.45)]'
             : 'bg-transparent'
         }`}
       >
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-          <button
-            type="button"
-            onClick={() => scrollToSection('home')}
-            className="group flex items-center gap-3 text-left"
-            aria-label="Go to home"
-          >
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3.5 sm:px-6">
+
+          <button type="button" onClick={() => scrollTo('home')} className="flex items-center gap-2.5" aria-label="Home">
             <span
-              style={{
-                background: 'linear-gradient(135deg, rgba(34,211,238,0.15), rgba(139,92,246,0.15))',
-                border: '1px solid rgba(34,211,238,0.3)'
-              }}
-              className="grid size-10 place-items-center rounded-xl text-sm font-bold text-cyan-300"
+              className="grid size-9 place-items-center rounded-lg text-sm font-bold text-cyan-300"
+              style={{ background: 'linear-gradient(135deg,rgba(34,211,238,.14),rgba(139,92,246,.14))', border: '1px solid rgba(34,211,238,.28)' }}
             >
               HS
             </span>
-            <span>
-              <span className="block text-sm font-semibold tracking-wide text-white">Harsh Soni</span>
-              <span className="block text-xs text-white/50">Full Stack Software Engineer</span>
-            </span>
+            <span className="hidden text-sm font-semibold text-white sm:block">Harsh Soni</span>
           </button>
 
-          <div className="hidden items-center gap-1 md:flex">
-            {navItems.map((item) => (
+          {/* desktop nav */}
+          <div className="hidden items-center gap-0.5 md:flex">
+            {navItems.map(({ id, label }) => (
               <button
-                type="button"
-                key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                className={`rounded-lg px-3.5 py-2 text-sm font-medium transition-all duration-200 ${
-                  activeSection === item.id
-                    ? 'bg-white text-[#080c14]'
-                    : 'text-white/60 hover:bg-white/8 hover:text-white'
-                }`}
+                key={id} type="button"
+                onClick={() => scrollTo(id)}
+                className={`nav-link ${activeSection === id ? 'nav-link-active' : ''}`}
               >
-                {item.label}
+                {label}
               </button>
             ))}
           </div>
 
+          {/* mobile hamburger */}
           <button
             type="button"
-            className="grid size-10 place-items-center rounded-xl border border-white/10 bg-white/4 text-white md:hidden"
-            onClick={() => setMobileMenuOpen((open) => !open)}
-            aria-label="Toggle navigation"
-            aria-expanded={mobileMenuOpen}
+            className="grid size-9 place-items-center rounded-lg border border-white/10 bg-white/4 md:hidden"
+            onClick={() => setMobileOpen(o => !o)}
+            aria-label="Toggle menu"
           >
-            {mobileMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+            {mobileOpen ? <X className="size-4" /> : <Menu className="size-4" />}
           </button>
         </div>
 
-        {mobileMenuOpen && (
+        {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -8 }}
+            initial={{ opacity: 0, y: -6 }}
             animate={{ opacity: 1, y: 0 }}
-            className="border-t border-white/8 bg-[#080c14]/95 backdrop-blur-2xl px-4 py-3 md:hidden"
+            className="border-t border-white/[0.07] bg-[#09091a]/95 backdrop-blur-2xl px-4 py-2 md:hidden"
           >
-            {navItems.map((item) => (
+            {navItems.map(({ id, label }) => (
               <button
-                type="button"
-                key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                className={`block w-full rounded-lg px-3 py-3 text-left text-sm font-medium ${
-                  activeSection === item.id ? 'bg-white/10 text-white' : 'text-white/65'
-                }`}
+                key={id} type="button"
+                onClick={() => scrollTo(id)}
+                className={`block w-full rounded-lg px-3 py-2.5 text-left text-sm font-medium ${activeSection === id ? 'bg-white/10 text-white' : 'text-white/55'}`}
               >
-                {item.label}
+                {label}
               </button>
             ))}
           </motion.div>
@@ -202,218 +201,215 @@ function App() {
       </nav>
 
       <main>
-        {/* ── Hero ── */}
-        <section id="home" className="relative isolate min-h-screen px-4 pt-24 sm:px-6 lg:px-8 overflow-hidden">
-          {/* background grid */}
-          <div className="hero-grid absolute inset-0 -z-10" />
+        {/* ── Hero ───────────────────────────────────────────────────────── */}
+        <section
+          id="home"
+          ref={heroRef}
+          onMouseMove={onMouseMove}
+          onMouseLeave={() => setSpotOn(false)}
+          className="relative isolate flex min-h-screen flex-col justify-center overflow-hidden px-4 pt-20 sm:px-6 lg:px-8"
+        >
+          {/* background layers */}
+          <div className="hero-grid absolute inset-0 -z-20" />
+          <div className="hero-glow  absolute -z-10" style={{ top: '5%',  left: '-5%' }} />
+          <div className="hero-glow-2 absolute -z-10" style={{ top: '30%', right: '-8%' }} />
 
-          {/* floating orbs */}
-          <div className="hero-orb hero-orb-cyan absolute -z-10" style={{ top: '-8%', left: '-8%' }} />
-          <div className="hero-orb hero-orb-purple absolute -z-10" style={{ top: '20%', right: '-10%' }} />
-          <div className="hero-orb hero-orb-indigo absolute -z-10" style={{ bottom: '5%', left: '25%' }} />
+          {/* mouse spotlight */}
+          <div
+            className="hero-spotlight pointer-events-none absolute -z-10"
+            style={{ left: mouse.x, top: mouse.y, opacity: spotOn ? 1 : 0 }}
+          />
 
-          <div className="mx-auto grid min-h-[calc(100vh-6rem)] max-w-7xl items-center gap-14 py-12 lg:grid-cols-[1.1fr_0.9fr]">
-            <motion.div
-              initial={{ opacity: 0, y: 28 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.75, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className="max-w-3xl"
-            >
-              {/* badge */}
-              <motion.p
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-                className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/8 px-4 py-2 text-sm font-medium text-emerald-200"
-              >
-                <span className="size-2 rounded-full bg-emerald-400" style={{ animation: 'pulse-dot 1.8s ease-out infinite' }} />
-                <BriefcaseBusiness className="size-4" />
-                Software Engineer · Nagarro · Jan 2025 – Present
-              </motion.p>
+          <div className="mx-auto w-full max-w-6xl">
+            <div className="grid items-center gap-10 lg:grid-cols-[1fr_auto]">
 
-              {/* name */}
-              <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.15 }}
-                className="mb-3 text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl"
-              >
-                <span className="block text-white/65 text-2xl sm:text-3xl font-semibold mb-1">Hi, I'm</span>
-                <span className="text-gradient block">Harsh Soni</span>
-              </motion.h1>
+              {/* ── Left: text content ── */}
+              <div className="max-w-2xl">
 
-              {/* typewriter */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.35 }}
-                className="mb-5 flex items-center text-base font-medium text-white/60 sm:text-lg"
-              >
-                <span className="text-gradient-cyan">{role}</span>
-                <span className="typewriter-cursor" />
-              </motion.div>
-
-              <motion.p
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.65, delay: 0.4 }}
-                className="mb-10 max-w-xl text-lg leading-8 text-white/58"
-              >
-                Computer science grad building Java Spring Boot services, React interfaces,
-                multi-cloud CI/CD automation, and products where performance and reliability matter.
-              </motion.p>
-
-              {/* CTAs */}
-              <motion.div
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.5 }}
-                className="mb-8 flex flex-col gap-3 sm:flex-row"
-              >
-                <button
-                  type="button"
-                  onClick={() => scrollToSection('projects')}
-                  className="primary-action inline-flex items-center px-6 py-3.5 text-base"
+                {/* badge */}
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/7 px-3.5 py-1.5 text-xs font-semibold text-emerald-200"
                 >
-                  View my work
-                  <ArrowDown className="ml-2 size-4" />
-                </button>
-                <a
-                  href={RESUME_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="action-link px-6 py-3.5 text-base"
+                  <span className="avail-dot" />
+                  <BriefcaseBusiness className="size-3.5" />
+                  Software Engineer · Nagarro · Jan 2025 – Present
+                </motion.div>
+
+                {/* name */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.65, delay: 0.08 }}
                 >
-                  <Download className="size-4" />
-                  Resume
-                </a>
-              </motion.div>
-
-              {/* socials */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.65 }}
-                className="flex items-center gap-3"
-              >
-                <a className="social-link" href="https://github.com/harshcode1" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-                  <Github className="size-5" />
-                </a>
-                <a className="social-link" href="https://linkedin.com/in/harsh-soni" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-                  <Linkedin className="size-5" />
-                </a>
-                <a className="social-link" href="mailto:harsh9995soni@gmail.com" aria-label="Email">
-                  <Mail className="size-5" />
-                </a>
-              </motion.div>
-            </motion.div>
-
-            {/* profile + stats */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.94, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className="relative"
-            >
-              <div className="profile-panel">
-                <img src="/profile.jpg" alt="Harsh Soni" className="h-full w-full object-cover" />
-              </div>
-              <div className="mt-4 grid gap-3 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
-                {highlights.map((h, i) => (
-                  <motion.div
-                    key={h.label}
-                    initial={{ opacity: 0, y: 16 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.55 + i * 0.07 }}
-                    className="rounded-xl border border-white/8 bg-white/[0.04] p-4 backdrop-blur-sm"
-                    style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05)' }}
+                  <p className="mb-1 text-lg font-medium text-white/45 sm:text-xl">Hi, I'm</p>
+                  <h1
+                    className="font-black tracking-tight text-white"
+                    style={{ fontSize: 'clamp(2.8rem,6.5vw,4.8rem)', lineHeight: 1.05, letterSpacing: '-.03em' }}
                   >
-                    <p className="text-xs font-semibold uppercase tracking-widest text-white/40">{h.label}</p>
-                    <p className="mt-2 text-sm font-semibold leading-5 text-white/85">{h.value}</p>
-                  </motion.div>
-                ))}
+                    Harsh <span className="text-gradient">Soni</span>
+                    <span style={{ color: '#22d3ee' }}>.</span>
+                  </h1>
+                </motion.div>
+
+                {/* typewriter */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.4, delay: 0.22 }}
+                  className="mt-3 mb-5 flex items-center gap-2 text-base font-medium text-white/55 sm:text-lg"
+                >
+                  <span className="text-gradient-cyan font-semibold">{role}</span>
+                  <span className="tw-cursor" />
+                </motion.div>
+
+                {/* bio */}
+                <motion.p
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.55, delay: 0.3 }}
+                  className="mb-8 max-w-lg text-base leading-7 text-white/52"
+                >
+                  CS grad building production-grade Java Spring Boot services, React interfaces,
+                  and multi-cloud CI/CD automation. I care about code that's fast, readable, and ships.
+                </motion.p>
+
+                {/* CTAs */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.38 }}
+                  className="mb-7 flex flex-wrap gap-3"
+                >
+                  <button type="button" onClick={() => scrollTo('projects')} className="btn-primary">
+                    View my work <ArrowDown className="size-4" />
+                  </button>
+                  <a href={RESUME_URL} target="_blank" rel="noopener noreferrer" className="btn-ghost">
+                    <Download className="size-4" /> Resume
+                  </a>
+                </motion.div>
+
+                {/* socials + location */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.4, delay: 0.5 }}
+                  className="flex flex-wrap items-center gap-3"
+                >
+                  <a className="social-btn" href="https://github.com/harshcode1" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                    <Github className="size-4" />
+                  </a>
+                  <a className="social-btn" href="https://linkedin.com/in/harsh-soni" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                    <Linkedin className="size-4" />
+                  </a>
+                  <a className="social-btn" href="mailto:harsh9995soni@gmail.com" aria-label="Email">
+                    <Mail className="size-4" />
+                  </a>
+                  <span className="flex items-center gap-1.5 text-xs text-white/35">
+                    <MapPin className="size-3.5" />
+                    Gurugram, India
+                  </span>
+                </motion.div>
               </div>
+
+              {/* ── Right: circular photo + mini stats ── */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.92 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.7, delay: 0.15, ease: [0.25, 0.46, 0.45, 0.94] }}
+                className="flex flex-col items-center gap-5 lg:items-start"
+              >
+                {/* photo */}
+                <div className="profile-ring mx-auto lg:mx-0">
+                  <div className="profile-ring-inner">
+                    <img src="/profile.jpg" alt="Harsh Soni" />
+                  </div>
+                </div>
+
+                {/* stat chips */}
+                <div className="grid w-full max-w-[190px] gap-2 lg:w-auto">
+                  {stats.map(s => <StatCard key={s.label} {...s} />)}
+                </div>
+              </motion.div>
+
+            </div>
+
+            {/* scroll indicator */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 1 }}
+              className="mt-16 hidden justify-center md:flex"
+            >
+              <button
+                type="button"
+                onClick={() => scrollTo('about')}
+                className="flex flex-col items-center gap-2 text-white/25 transition hover:text-white/50"
+                aria-label="Scroll down"
+              >
+                <span className="text-xs tracking-widest uppercase font-medium">Scroll</span>
+                <motion.div
+                  animate={{ y: [0, 5, 0] }}
+                  transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
+                >
+                  <ArrowDown className="size-4" />
+                </motion.div>
+              </button>
             </motion.div>
           </div>
         </section>
 
-        {/* ── About ── */}
+        {/* ── About ──────────────────────────────────────────────────────── */}
         <section id="about" className="section-shell">
           <div className="section-heading">
             <p className="eyebrow">About</p>
-            <h2 className="text-gradient">A practical engineer with product instincts.</h2>
+            <h2>A practical engineer with product instincts.</h2>
             <p>
-              I like work that sits close to real users and real systems: APIs that stay reliable,
-              dashboards that make decisions easier, and delivery pipelines that help teams ship
-              with confidence.
+              I like work that sits close to real users and real systems — APIs that stay reliable,
+              dashboards that make decisions easier, and CI/CD pipelines that help teams ship fast.
             </p>
           </div>
 
-          <div className="mx-auto grid max-w-7xl gap-5 lg:grid-cols-3">
-            <motion.article
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-80px' }}
-              transition={{ duration: 0.55 }}
-              className="feature-card lg:col-span-2"
-            >
-              <div className="skill-icon-wrap mb-5">
-                <BriefcaseBusiness className="size-5" />
-              </div>
+          <div className="mx-auto grid max-w-6xl gap-4 lg:grid-cols-3">
+            <AboutCard className="lg:col-span-2">
+              <div className="skill-icon mb-4"><BriefcaseBusiness className="size-4" /></div>
               <h3>What I bring</h3>
-              <p className="mt-3">
-                My background combines Java backend development, full-stack product building, and
-                competitive programming. At Nagarro, I work on Spring Boot service layers, React
-                components, TDD compliance systems, and DevOps automation — shipping to production
-                across Azure, AWS, and GCP. In side projects, I've built productivity tools and crypto
-                simulators with modern Java and Next.js stacks.
+              <p className="mt-2.5 text-sm leading-7">
+                Java backend development, full-stack product building, and competitive programming.
+                At Nagarro I work on Spring Boot service layers, React components, TDD compliance
+                systems, and multi-cloud DevOps automation. Side projects include a mental health
+                platform, real-time chat app, and a crypto simulator with measurable performance wins.
               </p>
-            </motion.article>
+            </AboutCard>
 
-            <motion.article
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-80px' }}
-              transition={{ duration: 0.55, delay: 0.08 }}
-              className="feature-card"
-            >
+            <AboutCard>
               <h3>Education</h3>
-              <p className="mt-3">
-                B.Tech Computer Science<br />
-                <span className="font-semibold text-white/85">The NorthCap University</span>, Gurugram<br />
-                2021 – 2025 · CGPA <span className="font-bold text-cyan-300">8.53</span>
-              </p>
-            </motion.article>
+              <div className="mt-3 space-y-1">
+                <p className="text-sm font-semibold text-white/85">B.Tech Computer Science</p>
+                <p className="text-sm text-white/55">The NorthCap University, Gurugram</p>
+                <p className="text-sm text-white/55">2021 – 2025</p>
+                <p className="mt-2 text-lg font-black text-gradient-cyan leading-none">8.53 CGPA</p>
+              </div>
+            </AboutCard>
 
-            <motion.article
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-80px' }}
-              transition={{ duration: 0.55, delay: 0.12 }}
-              className="feature-card"
-            >
+            <AboutCard>
               <h3>Recognition</h3>
-              <p className="mt-3">
-                Amazon ML Summer School '23 (selected from 60,000+ applicants), AWS Academy Cloud
-                Foundations, and AWS Academy Cloud Developing.
+              <p className="mt-2.5 text-sm leading-7">
+                Amazon ML Summer School '23 (selected from 60,000+), AWS Cloud Developing &
+                Foundations certified. Codeforces Specialist (top 15%) with 1600+ rating.
               </p>
-            </motion.article>
+            </AboutCard>
 
-            <motion.article
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-80px' }}
-              transition={{ duration: 0.55, delay: 0.16 }}
-              className="feature-card lg:col-span-2"
-            >
+            <AboutCard className="lg:col-span-2">
               <h3>How I work</h3>
-              <p className="mt-3">
-                I care about readable code, measurable outcomes, and interfaces that don't make users
-                think harder than they need to. I prefer simple systems that can be explained, tested,
-                and improved over clever complexity. TDD, clean APIs, and proper documentation aren't
-                optional extras — they're how I ship.
+              <p className="mt-2.5 text-sm leading-7">
+                Readable code, measurable outcomes, interfaces that don't make users think harder
+                than necessary. I prefer simple systems that can be explained, tested, and improved
+                over clever complexity. TDD, clean APIs, and documentation are non-negotiable.
               </p>
-            </motion.article>
+            </AboutCard>
           </div>
         </section>
 
@@ -423,26 +419,19 @@ function App() {
         <ContactSection resumeUrl={RESUME_URL} />
       </main>
 
-      <footer className="border-t border-white/[0.07] px-4 py-10">
-        <div className="mx-auto flex max-w-7xl flex-col items-center gap-4 sm:flex-row sm:justify-between">
-          <p className="text-sm text-white/35">
-            © 2026 Harsh Soni — Built with React, Vite & Framer Motion
+      {/* ── Footer ─────────────────────────────────────────────────────── */}
+      <footer className="border-t border-white/[0.06] px-4 py-8">
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 sm:flex-row">
+          <p className="text-xs text-white/28">
+            © 2026 Harsh Soni · Built with React, Vite & Framer Motion
           </p>
-          <div className="flex items-center gap-3">
-            <a className="social-link" href="https://github.com/harshcode1" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-              <Github className="size-4" />
-            </a>
-            <a className="social-link" href="https://linkedin.com/in/harsh-soni" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-              <Linkedin className="size-4" />
-            </a>
-            <a className="social-link" href="mailto:harsh9995soni@gmail.com" aria-label="Email">
-              <Mail className="size-4" />
-            </a>
+          <div className="flex items-center gap-2.5">
+            <a className="social-btn" href="https://github.com/harshcode1"    target="_blank" rel="noopener noreferrer" aria-label="GitHub"><Github className="size-3.5" /></a>
+            <a className="social-btn" href="https://linkedin.com/in/harsh-soni" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><Linkedin className="size-3.5" /></a>
+            <a className="social-btn" href="mailto:harsh9995soni@gmail.com" aria-label="Email"><Mail className="size-3.5" /></a>
           </div>
         </div>
       </footer>
     </div>
   )
 }
-
-export default App

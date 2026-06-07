@@ -204,9 +204,9 @@ const ProjectsSection = () => {
                     )}
                   </div>
 
-                  <p className="mt-2.5 text-white/58 text-sm leading-relaxed">{project.description}</p>
+                  <p className="mt-2.5 text-white/55 text-xs leading-relaxed">{project.description}</p>
 
-                  <ul className="mt-4 space-y-2">
+                  <ul className="mt-3.5 space-y-2">
                     {project.proof.map((item) => (
                       <li key={item} className="impact-item text-xs">
                         {item}
@@ -214,9 +214,9 @@ const ProjectsSection = () => {
                     ))}
                   </ul>
 
-                  <div className="mt-4 flex flex-wrap gap-1.5">
+                  <div className="mt-3.5 flex flex-wrap gap-1.5">
                     {project.stack.map((tech) => (
-                      <span key={tech} className="tech-pill text-[11px]">
+                      <span key={tech} className="tech-pill">
                         {tech}
                       </span>
                     ))}

@@ -1,4 +1,5 @@
-import { motion } from 'framer-motion'
+import { useRef } from 'react'
+import { motion, useScroll, useSpring, useTransform } from 'framer-motion'
 import { Calendar, MapPin } from 'lucide-react'
 
 const experiences = [
@@ -6,31 +7,29 @@ const experiences = [
     title: 'Software Engineer',
     company: 'Nagarro',
     location: 'Gurugram',
-    period: 'January 2025 – Present',
+    period: 'Jan 2025 – Present',
     current: true,
-    summary:
-      'Building Spring Boot service layers, React components, TDD compliance systems, and multi-cloud DevOps automation on enterprise-scale platforms.',
+    summary: 'Building Spring Boot service layers, React components, TDD systems, and multi-cloud DevOps automation on enterprise-scale platforms.',
     impact: [
-      'Developed Spring Boot service layers in the Phoenix OS platform using Java 8+ (streams, lambdas, Optional); authored JUnit + Mockito test suites as part of mandatory TDD compliance gates.',
-      'Engineered a Context Retention System with strict TDD quality gates — enforced mandatory interface definitions and Red Phase failing tests before implementation via automated compliance checks.',
-      'Built atomic React.js components from design specs using reusable Tailwind design token patterns; structured code reviews and clean code principles cut frontend handoff time by 85%.',
-      'Developed a DevOps Orchestration Agent automating multi-cloud CI/CD setup (Azure / AWS / GCP) for existing infrastructure — generates 30+ configuration files with integrated DevSecOps safeguards.',
-      'Enhanced iLease (Erste Bank FinTech platform) by optimizing Spring Boot microservices and multi-threaded modules, achieving 15% improvement in data throughput for high-volume transactions.'
+      'Spring Boot service layers in Phoenix OS using Java 8+ (streams, lambdas, Optional); JUnit + Mockito test suites for mandatory TDD compliance gates.',
+      'Context Retention System with strict TDD gates — mandatory interface definitions and Red Phase tests before implementation via automated compliance checks.',
+      'Atomic React.js components with reusable Tailwind design tokens; structured code reviews cut frontend handoff time by 85%.',
+      'DevOps Orchestration Agent automating multi-cloud CI/CD (Azure / AWS / GCP) — generates 30+ config files with integrated DevSecOps safeguards.',
+      'Enhanced iLease (Erste Bank FinTech) by optimising Spring Boot microservices; improved high-volume transaction throughput by 15%.'
     ],
-    stack: ['Java 8+', 'Spring Boot', 'Spring Security', 'React.js', 'Tailwind CSS', 'JUnit', 'Mockito', 'Azure', 'AWS', 'GCP', 'DevSecOps', 'TDD']
+    stack: ['Java 8+', 'Spring Boot', 'Spring Security', 'React.js', 'Tailwind CSS', 'JUnit', 'Mockito', 'Azure', 'AWS', 'GCP', 'TDD']
   },
   {
     title: 'Full Stack Intern',
     company: 'TailorTalk',
     location: 'Remote',
-    period: 'August 2024 – October 2024',
+    period: 'Aug 2024 – Oct 2024',
     current: false,
-    summary:
-      'Led full-stack development in an Agile setup, revamping an AI assistant and improving product engagement, performance, and backend efficiency.',
+    summary: 'Led full-stack development in an Agile setup, revamping an AI assistant and improving engagement, site speed, and backend efficiency.',
     impact: [
-      'Revamped AI assistant and optimized backend APIs through SEO and Lighthouse audits — boosted user engagement by 25%, site speed by 30%, and data efficiency by 40%.',
-      'Version-controlled features with Git in an Agile/Scrum workflow; collaborated on RESTful API integrations and maintained clean, modular Java-style backend code.',
-      'Maintained clean, modular backend code following established best practices throughout the project lifecycle.'
+      'Revamped AI assistant + optimised backend APIs via SEO and Lighthouse audits — boosted user engagement by 25%, site speed by 30%, data efficiency by 40%.',
+      'Version-controlled features with Git in an Agile/Scrum workflow; collaborated on RESTful API integrations.',
+      'Maintained clean, modular backend code following established Java-style best practices.'
     ],
     stack: ['React', 'Node.js', 'REST APIs', 'Git', 'Agile/Scrum', 'SEO', 'Lighthouse']
   },
@@ -38,108 +37,99 @@ const experiences = [
     title: 'Amazon ML Summer School',
     company: 'Amazon',
     location: 'Remote',
-    period: 'September 2023 – October 2023',
+    period: 'Sep 2023 – Oct 2023',
     current: false,
-    summary:
-      'Selected from 60,000+ applicants nationwide (~5% acceptance) for Amazon\'s elite machine learning programme.',
+    summary: 'Selected from 60,000+ nationwide applicants (~5% acceptance) for Amazon\'s elite machine learning programme.',
     impact: [
-      'Gained expertise in probabilistic graphical models, reinforcement learning, deep neural networks, unsupervised learning, and supervised learning.',
-      'Strengthened ML fundamentals that directly inform AI-assisted application development and system design thinking.'
+      'Studied probabilistic graphical models, reinforcement learning, deep neural networks, unsupervised and supervised learning.',
+      'ML fundamentals that directly inform AI-assisted application development and system design decisions.'
     ],
     stack: ['Machine Learning', 'Deep Learning', 'Neural Networks', 'Reinforcement Learning', 'PGMs']
   }
 ]
 
-const containerVariants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.1 } }
-}
 const itemVariants = {
-  hidden: { opacity: 0, x: -24 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] } }
+  hidden: { opacity: 0, x: -20 },
+  visible: (i) => ({
+    opacity: 1, x: 0,
+    transition: { duration: 0.5, delay: i * 0.1, ease: [0.25, 0.46, 0.45, 0.94] }
+  })
 }
 
-const ExperienceSection = () => (
-  <section id="experience" className="section-shell">
-    <div className="section-heading">
-      <p className="eyebrow">Experience</p>
-      <h2>Engineering roles with measurable outcomes.</h2>
-      <p>
-        A timeline of positions where I shipped backend services, product interfaces, performance
-        improvements, and quality automation — all with real metrics.
-      </p>
-    </div>
+export default function ExperienceSection() {
+  const sectionRef = useRef(null)
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start 85%', 'end 30%'] })
+  const scaleY = useSpring(scrollYProgress, { stiffness: 100, damping: 25 })
 
-    <div className="mx-auto max-w-5xl">
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: '-60px' }}
-        className="relative border-l border-white/[0.09] pl-8 sm:pl-12"
-      >
-        {experiences.map((exp) => (
-          <motion.article
-            key={`${exp.company}-${exp.title}`}
-            variants={itemVariants}
-            className={`timeline-card ${exp.current ? 'timeline-card-current' : ''}`}
-          >
-            {/* timeline dot */}
-            <span className={`timeline-dot ${exp.current ? 'timeline-dot-current' : ''}`} />
+  return (
+    <section id="experience" ref={sectionRef} className="section-shell">
+      <div className="section-heading">
+        <p className="eyebrow">Experience</p>
+        <h2>Engineering roles with measurable outcomes.</h2>
+        <p>
+          A timeline of positions where I shipped backend services, product interfaces, performance
+          improvements, and quality automation — all with real, quantified impact.
+        </p>
+      </div>
 
-            {/* header */}
-            <div className="flex flex-wrap items-start justify-between gap-4">
-              <div>
-                <div className="flex flex-wrap items-center gap-3">
-                  <h3>{exp.title}</h3>
-                  {exp.current && (
-                    <span className="status-pill">
-                      <span
-                        className="size-1.5 rounded-full bg-emerald-400"
-                        style={{ animation: 'pulse-dot 1.8s ease-out infinite' }}
-                      />
-                      Current
-                    </span>
-                  )}
+      <div className="mx-auto max-w-4xl">
+        {/* timeline */}
+        <div className="tl-wrap">
+          {/* animated fill line */}
+          <div className="tl-line">
+            <motion.div className="tl-line-fill h-full" style={{ scaleY, originY: 0 }} />
+          </div>
+
+          {experiences.map((exp, i) => (
+            <motion.article
+              key={`${exp.company}-${exp.title}`}
+              custom={i}
+              variants={itemVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-60px' }}
+              className={`tl-card ${exp.current ? 'tl-card-current' : ''}`}
+            >
+              {/* dot */}
+              <span className={`tl-dot ${exp.current ? 'tl-dot-current' : ''}`} />
+
+              {/* header */}
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <div className="flex flex-wrap items-center gap-2.5">
+                    <h3 className="text-base font-bold text-white">{exp.title}</h3>
+                    {exp.current && (
+                      <span className="status-pill">
+                        <span className="avail-dot" style={{ width: 6, height: 6 }} />
+                        Current
+                      </span>
+                    )}
+                  </div>
+                  <p className="mt-0.5 text-base font-semibold text-cyan-300">{exp.company}</p>
                 </div>
-                <p className="mt-1 text-lg font-semibold text-cyan-300">{exp.company}</p>
               </div>
-            </div>
 
-            {/* meta */}
-            <div className="mt-3 flex flex-wrap gap-5 text-sm text-white/50">
-              <span className="inline-flex items-center gap-1.5">
-                <Calendar className="size-3.5" />
-                {exp.period}
-              </span>
-              <span className="inline-flex items-center gap-1.5">
-                <MapPin className="size-3.5" />
-                {exp.location}
-              </span>
-            </div>
+              {/* meta */}
+              <div className="mt-2.5 flex flex-wrap gap-4 text-xs text-white/40">
+                <span className="inline-flex items-center gap-1.5"><Calendar className="size-3.5" />{exp.period}</span>
+                <span className="inline-flex items-center gap-1.5"><MapPin className="size-3.5" />{exp.location}</span>
+              </div>
 
-            <p className="mt-5 text-white/65">{exp.summary}</p>
+              <p className="mt-3.5 text-sm text-white/58 leading-6">{exp.summary}</p>
 
-            <ul className="mt-5 space-y-3">
-              {exp.impact.map((item) => (
-                <li key={item} className="impact-item">
-                  {item}
-                </li>
-              ))}
-            </ul>
+              <ul className="mt-4 space-y-2.5">
+                {exp.impact.map((item) => (
+                  <li key={item} className="impact-item">{item}</li>
+                ))}
+              </ul>
 
-            <div className="mt-6 flex flex-wrap gap-2">
-              {exp.stack.map((tech) => (
-                <span key={tech} className="tech-pill">
-                  {tech}
-                </span>
-              ))}
-            </div>
-          </motion.article>
-        ))}
-      </motion.div>
-    </div>
-  </section>
-)
-
-export default ExperienceSection
+              <div className="mt-5 flex flex-wrap gap-1.5">
+                {exp.stack.map(t => <span key={t} className="tech-pill">{t}</span>)}
+              </div>
+            </motion.article>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}

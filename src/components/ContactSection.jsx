@@ -6,196 +6,145 @@ import emailjs from '@emailjs/browser'
 const initialForm = { name: '', email: '', subject: '', message: '' }
 
 const contactLinks = [
-  { label: 'Email', value: 'harsh9995soni@gmail.com', href: 'mailto:harsh9995soni@gmail.com', icon: Mail },
-  { label: 'Phone', value: '+91 8950775755', href: 'tel:+918950775755', icon: Phone },
-  { label: 'Location', value: 'Gurugram, India', href: 'https://maps.google.com/?q=Gurugram,India', icon: MapPin }
+  { label: 'Email',    value: 'harsh9995soni@gmail.com', href: 'mailto:harsh9995soni@gmail.com', icon: Mail },
+  { label: 'Phone',    value: '+91 8950775755',           href: 'tel:+918950775755',              icon: Phone },
+  { label: 'Location', value: 'Gurugram, India',          href: 'https://maps.google.com/?q=Gurugram,India', icon: MapPin }
 ]
 
 const socialLinks = [
-  { label: 'GitHub', href: 'https://github.com/harshcode1', icon: Github },
+  { label: 'GitHub',   href: 'https://github.com/harshcode1',     icon: Github },
   { label: 'LinkedIn', href: 'https://linkedin.com/in/harsh-soni', icon: Linkedin },
-  { label: 'Email', href: 'mailto:harsh9995soni@gmail.com', icon: Mail }
+  { label: 'Email',    href: 'mailto:harsh9995soni@gmail.com',      icon: Mail }
 ]
 
-const requiredEmailConfig = [
-  'VITE_EMAILJS_SERVICE_ID',
-  'VITE_EMAILJS_TEMPLATE_ID',
-  'VITE_EMAILJS_PUBLIC_KEY'
-]
+const REQUIRED_ENV = ['VITE_EMAILJS_SERVICE_ID', 'VITE_EMAILJS_TEMPLATE_ID', 'VITE_EMAILJS_PUBLIC_KEY']
 
-const ContactSection = ({ resumeUrl }) => {
-  const [formData, setFormData] = useState(initialForm)
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitStatus, setSubmitStatus] = useState(null)
+export default function ContactSection({ resumeUrl }) {
+  const [form, setForm]       = useState(initialForm)
+  const [sending, setSending] = useState(false)
+  const [status, setStatus]   = useState(null)
 
-  const isEmailConfigured = requiredEmailConfig.every((key) => Boolean(import.meta.env[key]))
+  const configured = REQUIRED_ENV.every(k => Boolean(import.meta.env[k]))
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target
-    setFormData((cur) => ({ ...cur, [name]: value }))
-  }
+  const onChange = e => setForm(f => ({ ...f, [e.target.name]: e.target.value }))
 
-  const handleSubmit = async (event) => {
-    event.preventDefault()
-    if (!isEmailConfigured) { setSubmitStatus('missing-config'); return }
-
-    setIsSubmitting(true)
-    setSubmitStatus(null)
+  const onSubmit = async e => {
+    e.preventDefault()
+    if (!configured) { setStatus('missing'); return }
+    setSending(true); setStatus(null)
     try {
       await emailjs.send(
         import.meta.env.VITE_EMAILJS_SERVICE_ID,
         import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-        { from_name: formData.name, from_email: formData.email, subject: formData.subject, message: formData.message, to_name: 'Harsh Soni' },
+        { from_name: form.name, from_email: form.email, subject: form.subject, message: form.message, to_name: 'Harsh Soni' },
         import.meta.env.VITE_EMAILJS_PUBLIC_KEY
       )
-      setSubmitStatus('success')
-      setFormData(initialForm)
-    } catch (error) {
-      console.error('Error sending message:', error)
-      setSubmitStatus('error')
-    } finally {
-      setIsSubmitting(false)
-    }
+      setStatus('success'); setForm(initialForm)
+    } catch { setStatus('error') }
+    finally { setSending(false) }
   }
 
   return (
     <section id="contact" className="section-shell">
       <div className="section-heading">
         <p className="eyebrow">Contact</p>
-        <h2>Have a role or collaboration in mind?</h2>
+        <h2>Have a role or project in mind?</h2>
         <p>
-          Send a message with context, timeline, and where I can help. Open to software engineering
-          roles and meaningful full-stack product work.
+          Send a message with context and timeline. Open to software engineering roles and
+          meaningful full-stack product work.
         </p>
       </div>
 
-      <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+      <div className="mx-auto grid max-w-6xl gap-5 lg:grid-cols-[1.1fr_0.9fr]">
+
+        {/* form */}
         <motion.form
-          initial={{ opacity: 0, x: -24 }}
+          initial={{ opacity: 0, x: -20 }}
           whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] }}
-          onSubmit={handleSubmit}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+          onSubmit={onSubmit}
           className="contact-form"
         >
           <div className="grid gap-4 sm:grid-cols-2">
             <label>
-              <span>Name</span>
-              <input name="name" value={formData.name} onChange={handleInputChange} placeholder="Your name" required />
+              <span className="form-label-text">Name</span>
+              <input name="name" value={form.name} onChange={onChange} placeholder="Your name" required className="form-input" />
             </label>
             <label>
-              <span>Email</span>
-              <input name="email" type="email" value={formData.email} onChange={handleInputChange} placeholder="you@example.com" required />
+              <span className="form-label-text">Email</span>
+              <input name="email" type="email" value={form.email} onChange={onChange} placeholder="you@example.com" required className="form-input" />
             </label>
           </div>
           <label>
-            <span>Subject</span>
-            <input name="subject" value={formData.subject} onChange={handleInputChange} placeholder="What should we build or discuss?" required />
+            <span className="form-label-text">Subject</span>
+            <input name="subject" value={form.subject} onChange={onChange} placeholder="What should we build or discuss?" required className="form-input" />
           </label>
           <label>
-            <span>Message</span>
-            <textarea name="message" value={formData.message} onChange={handleInputChange} placeholder="Share the useful details." rows={6} required />
+            <span className="form-label-text">Message</span>
+            <textarea name="message" value={form.message} onChange={onChange} placeholder="Share the useful details." rows={6} required className="form-input" />
           </label>
 
-          <button type="submit" disabled={isSubmitting} className="primary-action w-full py-3.5 text-base">
-            {isSubmitting ? (
-              'Sending...'
-            ) : (
-              <>
-                <Send className="size-4" />
-                Send message
-              </>
-            )}
+          <button type="submit" disabled={sending} className="btn-primary w-full justify-center py-3">
+            {sending ? 'Sending…' : <><Send className="size-4" /> Send message</>}
           </button>
 
-          {submitStatus === 'success' && (
-            <p className="form-alert success">
-              <CheckCircle className="size-5 shrink-0" />
-              Message sent. I will get back to you soon.
-            </p>
-          )}
-          {submitStatus === 'error' && (
-            <p className="form-alert error">
-              <AlertCircle className="size-5 shrink-0" />
-              Message failed to send. Please email me directly.
-            </p>
-          )}
-          {submitStatus === 'missing-config' && (
-            <p className="form-alert error">
-              <AlertCircle className="size-5 shrink-0" />
-              Email service not configured. Use direct email below.
-            </p>
-          )}
+          {status === 'success' && <p className="form-alert success"><CheckCircle className="size-4 shrink-0" />Message sent — I'll get back to you soon.</p>}
+          {status === 'error'   && <p className="form-alert error"><AlertCircle className="size-4 shrink-0" />Failed to send. Please email me directly.</p>}
+          {status === 'missing' && <p className="form-alert error"><AlertCircle className="size-4 shrink-0" />Email service not configured — use direct email.</p>}
         </motion.form>
 
+        {/* sidebar */}
         <motion.div
-          initial={{ opacity: 0, x: 24 }}
+          initial={{ opacity: 0, x: 20 }}
           whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="grid gap-5 content-start"
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+          className="grid gap-4 content-start"
         >
-          <article className="feature-card">
-            <h3>Direct channels</h3>
-            <div className="mt-5 grid gap-3">
-              {contactLinks.map((link) => {
-                const Icon = link.icon
-                return (
-                  <a
-                    key={link.label}
-                    href={link.href}
-                    className="contact-link"
-                    target={link.href.startsWith('http') ? '_blank' : undefined}
-                    rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                  >
-                    <span className="skill-icon-wrap size-10 shrink-0">
-                      <Icon className="size-4" />
-                    </span>
-                    <span>
-                      <span className="block text-xs text-white/40">{link.label}</span>
-                      <span className="block text-sm font-semibold text-white">{link.value}</span>
-                    </span>
-                  </a>
-                )
-              })}
+          <div className="card card-pad">
+            <h3 className="text-sm font-bold">Direct channels</h3>
+            <div className="mt-4 space-y-2.5">
+              {contactLinks.map(({ label, value, href, icon: Icon }) => (
+                <a
+                  key={label} href={href} className="contact-link"
+                  target={href.startsWith('http') ? '_blank' : undefined}
+                  rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                >
+                  <span className="skill-icon size-9 shrink-0"><Icon className="size-4" /></span>
+                  <span>
+                    <span className="block text-[11px] text-white/35">{label}</span>
+                    <span className="block text-sm font-semibold text-white">{value}</span>
+                  </span>
+                </a>
+              ))}
             </div>
-          </article>
+          </div>
 
-          <article className="feature-card">
-            <h3>Online</h3>
-            <div className="mt-5 flex flex-wrap gap-3">
-              {socialLinks.map((link) => {
-                const Icon = link.icon
-                return (
-                  <a
-                    key={link.label}
-                    href={link.href}
-                    className="action-link"
-                    target={link.href.startsWith('http') ? '_blank' : undefined}
-                    rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                  >
-                    <Icon className="size-4" />
-                    {link.label}
-                  </a>
-                )
-              })}
+          <div className="card card-pad">
+            <h3 className="text-sm font-bold">Online</h3>
+            <div className="mt-4 flex flex-wrap gap-2.5">
+              {socialLinks.map(({ label, href, icon: Icon }) => (
+                <a
+                  key={label} href={href} className="action-link"
+                  target={href.startsWith('http') ? '_blank' : undefined}
+                  rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                >
+                  <Icon className="size-3.5" />{label}
+                </a>
+              ))}
             </div>
-          </article>
+          </div>
 
-          <article className="feature-card">
-            <h3>Resume</h3>
-            <p className="mt-3">
-              Quick review of my background, experience, and projects — all in one place.
-            </p>
-            <a href={resumeUrl} target="_blank" rel="noopener noreferrer" className="primary-action mt-5">
-              <Download className="size-4" />
-              Open resume PDF
+          <div className="card card-pad">
+            <h3 className="text-sm font-bold">Resume</h3>
+            <p className="mt-2 text-sm leading-6">Quick overview of my background, experience, and projects.</p>
+            <a href={resumeUrl} target="_blank" rel="noopener noreferrer" className="btn-primary mt-4 text-sm py-2.5 px-4">
+              <Download className="size-3.5" /> Open PDF
             </a>
-          </article>
+          </div>
         </motion.div>
       </div>
     </section>
   )
 }
-
-export default ContactSection
