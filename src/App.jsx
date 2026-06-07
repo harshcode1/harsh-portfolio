@@ -236,9 +236,9 @@ function App() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.15 }}
-                className="mb-4 text-6xl font-black leading-[1.0] tracking-tight sm:text-7xl lg:text-8xl"
+                className="mb-3 text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl"
               >
-                <span className="block text-white/90">Hi, I'm</span>
+                <span className="block text-white/65 text-2xl sm:text-3xl font-semibold mb-1">Hi, I'm</span>
                 <span className="text-gradient block">Harsh Soni</span>
               </motion.h1>
 
@@ -247,7 +247,7 @@ function App() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.35 }}
-                className="mb-6 flex items-center text-xl font-semibold text-white/70 sm:text-2xl"
+                className="mb-5 flex items-center text-base font-medium text-white/60 sm:text-lg"
               >
                 <span className="text-gradient-cyan">{role}</span>
                 <span className="typewriter-cursor" />
