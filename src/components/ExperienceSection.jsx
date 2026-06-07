@@ -1,136 +1,145 @@
 import { motion } from 'framer-motion'
-import { Calendar, MapPin, ExternalLink } from 'lucide-react'
+import { Calendar, MapPin } from 'lucide-react'
 
-const ExperienceSection = () => {
-  const experiences = [
-    {
-      id: 1,
-      title: "Software Engineer",
-      company: "Nagarro",
-      location: "Gurugram",
-      period: "January 2025 – Present",
-      description: [
-        "Enhanced iLease, a FinTech lending platform for Erste Bank, by developing robust Spring Boot microservices and multi-threaded processing modules, resulting in a 15% improvement in data processing efficiency.",
-        "Developed and maintained core REST APIs in Spring Boot; contributed to the Angular frontend and cross-team feature development.",
-        "Integrated CI/CD pipelines using Jenkins and SonarQube, ensuring 80%+ test coverage with JUnit and maintaining code quality across distributed Agile teams."
-      ],
-      technologies: ["Java", "Spring Boot", "Hibernate", "REST APIs", "Jenkins", "SonarQube", "JUnit", "Angular"],
-      current: true
-    },
-    {
-      id: 2,
-      title: "Full Stack Intern",
-      company: "TailorTalk",
-      location: "Remote",
-      period: "August 2024 – October 2024",
-      description: [
-        "Independently managed full-stack development lifecycle in a remote environment; revamped AI-based sales assistant, improving dashboard UI and backend, increasing user engagement by 25%.",
-        "Integrated SEO practices and Lighthouse reports, boosting site speed by 30% and search rankings by 20%.",
-        "Developed and optimized backend APIs, enhancing system performance and data processing efficiency by 40%."
-      ],
-      technologies: ["React", "Node.js", "AI/ML", "SEO", "Lighthouse", "Backend APIs"],
-      current: false
-    },
-    {
-      id: 3,
-      title: "Amazon ML Summer School",
-      company: "Amazon",
-      location: "Remote",
-      period: "September 2023 – October 2023",
-      description: [
-        "Selected from over 60,000+ applicants nationwide (5% acceptance rate) to participate in exclusive Amazon ML Summer School’23 program.",
-        "Gained in-depth knowledge of probabilistic graphical models, reinforcement learning, deep neural networks, unsupervised learning, and supervised learning."
-      ],
-      technologies: ["Machine Learning", "Deep Learning", "Neural Networks", "Reinforcement Learning"],
-      current: false
-    }
-  ]
+const experiences = [
+  {
+    title: 'Software Engineer',
+    company: 'Nagarro',
+    location: 'Gurugram',
+    period: 'January 2025 – Present',
+    current: true,
+    summary:
+      'Building Spring Boot service layers, React components, TDD compliance systems, and multi-cloud DevOps automation on enterprise-scale platforms.',
+    impact: [
+      'Developed Spring Boot service layers in the Phoenix OS platform using Java 8+ (streams, lambdas, Optional); authored JUnit + Mockito test suites as part of mandatory TDD compliance gates.',
+      'Engineered a Context Retention System with strict TDD quality gates — enforced mandatory interface definitions and Red Phase failing tests before implementation via automated compliance checks.',
+      'Built atomic React.js components from design specs using reusable Tailwind design token patterns; structured code reviews and clean code principles cut frontend handoff time by 85%.',
+      'Developed a DevOps Orchestration Agent automating multi-cloud CI/CD setup (Azure / AWS / GCP) for existing infrastructure — generates 30+ configuration files with integrated DevSecOps safeguards.',
+      'Enhanced iLease (Erste Bank FinTech platform) by optimizing Spring Boot microservices and multi-threaded modules, achieving 15% improvement in data throughput for high-volume transactions.'
+    ],
+    stack: ['Java 8+', 'Spring Boot', 'Spring Security', 'React.js', 'Tailwind CSS', 'JUnit', 'Mockito', 'Azure', 'AWS', 'GCP', 'DevSecOps', 'TDD']
+  },
+  {
+    title: 'Full Stack Intern',
+    company: 'TailorTalk',
+    location: 'Remote',
+    period: 'August 2024 – October 2024',
+    current: false,
+    summary:
+      'Led full-stack development in an Agile setup, revamping an AI assistant and improving product engagement, performance, and backend efficiency.',
+    impact: [
+      'Revamped AI assistant and optimized backend APIs through SEO and Lighthouse audits — boosted user engagement by 25%, site speed by 30%, and data efficiency by 40%.',
+      'Version-controlled features with Git in an Agile/Scrum workflow; collaborated on RESTful API integrations and maintained clean, modular Java-style backend code.',
+      'Maintained clean, modular backend code following established best practices throughout the project lifecycle.'
+    ],
+    stack: ['React', 'Node.js', 'REST APIs', 'Git', 'Agile/Scrum', 'SEO', 'Lighthouse']
+  },
+  {
+    title: 'Amazon ML Summer School',
+    company: 'Amazon',
+    location: 'Remote',
+    period: 'September 2023 – October 2023',
+    current: false,
+    summary:
+      'Selected from 60,000+ applicants nationwide (~5% acceptance) for Amazon\'s elite machine learning programme.',
+    impact: [
+      'Gained expertise in probabilistic graphical models, reinforcement learning, deep neural networks, unsupervised learning, and supervised learning.',
+      'Strengthened ML fundamentals that directly inform AI-assisted application development and system design thinking.'
+    ],
+    stack: ['Machine Learning', 'Deep Learning', 'Neural Networks', 'Reinforcement Learning', 'PGMs']
+  }
+]
 
-  return (
-    <section id="experience" className="py-20 px-4">
-      <div className="max-w-6xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Experience</h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-purple-600 to-blue-600 mx-auto"></div>
-        </motion.div>
-
-        <div className="relative max-w-4xl mx-auto">
-          {/* Timeline line */}
-          <div className="absolute left-8 w-0.5 h-full bg-gradient-to-b from-purple-600 to-blue-600"></div>
-
-          {experiences.map((exp, index) => (
-            <motion.div
-              key={exp.id}
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: index * 0.2 }}
-              className="relative mb-12"
-            >
-              {/* Timeline dot */}
-              <div className="absolute left-6 w-4 h-4 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full top-6 z-10">
-                {exp.current && (
-                  <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full animate-ping"></div>
-                )}
-              </div>
-
-              <div className="ml-16">
-                <div className="bg-white/5 backdrop-blur-md rounded-2xl p-6 border border-white/10 hover:bg-white/10 transition-all duration-300">
-                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
-                    <div className="flex-1">
-                      <h3 className="text-xl font-semibold text-white mb-2">{exp.title}</h3>
-                      <h4 className="text-lg text-purple-400 font-medium mb-3">{exp.company}</h4>
-                      
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-4 text-white/70">
-                        <div className="flex items-center gap-2">
-                          <Calendar className="h-4 w-4" />
-                          <span className="text-sm">{exp.period}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <MapPin className="h-4 w-4" />
-                          <span className="text-sm">{exp.location}</span>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    {exp.current && (
-                      <span className="inline-block bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs px-3 py-1 rounded-full font-medium self-start">
-                        Current
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="space-y-3 mb-6">
-                    {exp.description.map((desc, i) => (
-                      <p key={i} className="text-white/80 leading-relaxed text-sm">
-                        • {desc}
-                      </p>
-                    ))}
-                  </div>
-
-                  <div className="flex flex-wrap gap-2">
-                    {exp.technologies.map((tech, i) => (
-                      <span
-                        key={i}
-                        className="bg-white/10 text-white/90 text-xs px-3 py-1.5 rounded-full border border-white/20 hover:bg-white/20 transition-colors"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
+const containerVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.1 } }
+}
+const itemVariants = {
+  hidden: { opacity: 0, x: -24 },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] } }
 }
 
-export default ExperienceSection
+const ExperienceSection = () => (
+  <section id="experience" className="section-shell">
+    <div className="section-heading">
+      <p className="eyebrow">Experience</p>
+      <h2>Engineering roles with measurable outcomes.</h2>
+      <p>
+        A timeline of positions where I shipped backend services, product interfaces, performance
+        improvements, and quality automation — all with real metrics.
+      </p>
+    </div>
 
+    <div className="mx-auto max-w-5xl">
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: '-60px' }}
+        className="relative border-l border-white/[0.09] pl-8 sm:pl-12"
+      >
+        {experiences.map((exp) => (
+          <motion.article
+            key={`${exp.company}-${exp.title}`}
+            variants={itemVariants}
+            className={`timeline-card ${exp.current ? 'timeline-card-current' : ''}`}
+          >
+            {/* timeline dot */}
+            <span className={`timeline-dot ${exp.current ? 'timeline-dot-current' : ''}`} />
+
+            {/* header */}
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div>
+                <div className="flex flex-wrap items-center gap-3">
+                  <h3>{exp.title}</h3>
+                  {exp.current && (
+                    <span className="status-pill">
+                      <span
+                        className="size-1.5 rounded-full bg-emerald-400"
+                        style={{ animation: 'pulse-dot 1.8s ease-out infinite' }}
+                      />
+                      Current
+                    </span>
+                  )}
+                </div>
+                <p className="mt-1 text-lg font-semibold text-cyan-300">{exp.company}</p>
+              </div>
+            </div>
+
+            {/* meta */}
+            <div className="mt-3 flex flex-wrap gap-5 text-sm text-white/50">
+              <span className="inline-flex items-center gap-1.5">
+                <Calendar className="size-3.5" />
+                {exp.period}
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <MapPin className="size-3.5" />
+                {exp.location}
+              </span>
+            </div>
+
+            <p className="mt-5 text-white/65">{exp.summary}</p>
+
+            <ul className="mt-5 space-y-3">
+              {exp.impact.map((item) => (
+                <li key={item} className="impact-item">
+                  {item}
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-6 flex flex-wrap gap-2">
+              {exp.stack.map((tech) => (
+                <span key={tech} className="tech-pill">
+                  {tech}
+                </span>
+              ))}
+            </div>
+          </motion.article>
+        ))}
+      </motion.div>
+    </div>
+  </section>
+)
+
+export default ExperienceSection

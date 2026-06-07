@@ -1,328 +1,201 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Mail, Phone, MapPin, Send, Github, Linkedin, Download, ExternalLink, CheckCircle, AlertCircle } from 'lucide-react'
-import { Button } from '@/components/ui/button.jsx'
+import { AlertCircle, CheckCircle, Download, Github, Linkedin, Mail, MapPin, Phone, Send } from 'lucide-react'
 import emailjs from '@emailjs/browser'
 
-const ContactSection = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
-  })
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitStatus, setSubmitStatus] = useState(null) // 'success', 'error', or null
+const initialForm = { name: '', email: '', subject: '', message: '' }
 
-  const handleInputChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    })
+const contactLinks = [
+  { label: 'Email', value: 'harsh9995soni@gmail.com', href: 'mailto:harsh9995soni@gmail.com', icon: Mail },
+  { label: 'Phone', value: '+91 8950775755', href: 'tel:+918950775755', icon: Phone },
+  { label: 'Location', value: 'Gurugram, India', href: 'https://maps.google.com/?q=Gurugram,India', icon: MapPin }
+]
+
+const socialLinks = [
+  { label: 'GitHub', href: 'https://github.com/harshcode1', icon: Github },
+  { label: 'LinkedIn', href: 'https://linkedin.com/in/harsh-soni', icon: Linkedin },
+  { label: 'Email', href: 'mailto:harsh9995soni@gmail.com', icon: Mail }
+]
+
+const requiredEmailConfig = [
+  'VITE_EMAILJS_SERVICE_ID',
+  'VITE_EMAILJS_TEMPLATE_ID',
+  'VITE_EMAILJS_PUBLIC_KEY'
+]
+
+const ContactSection = ({ resumeUrl }) => {
+  const [formData, setFormData] = useState(initialForm)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState(null)
+
+  const isEmailConfigured = requiredEmailConfig.every((key) => Boolean(import.meta.env[key]))
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target
+    setFormData((cur) => ({ ...cur, [name]: value }))
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    if (!isEmailConfigured) { setSubmitStatus('missing-config'); return }
+
     setIsSubmitting(true)
     setSubmitStatus(null)
-
     try {
-      // EmailJS configuration
-      const templateParams = {
-        from_name: formData.name,
-        from_email: formData.email,
-        subject: formData.subject,
-        message: formData.message,
-        to_name: 'Harsh Soni'
-      }
-
-      // Send email using EmailJS
       await emailjs.send(
         import.meta.env.VITE_EMAILJS_SERVICE_ID,
         import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-        templateParams,
+        { from_name: formData.name, from_email: formData.email, subject: formData.subject, message: formData.message, to_name: 'Harsh Soni' },
         import.meta.env.VITE_EMAILJS_PUBLIC_KEY
       )
-
       setSubmitStatus('success')
-      setFormData({ name: '', email: '', subject: '', message: '' })
-      
-      // Reset success message after 5 seconds
-      setTimeout(() => setSubmitStatus(null), 5000)
-      
+      setFormData(initialForm)
     } catch (error) {
       console.error('Error sending message:', error)
       setSubmitStatus('error')
-      
-      // Reset error message after 5 seconds
-      setTimeout(() => setSubmitStatus(null), 5000)
     } finally {
       setIsSubmitting(false)
     }
   }
 
-  const contactInfo = [
-    {
-      icon: <Mail className="h-6 w-6" />,
-      title: "Email",
-      value: "harsh9995soni@gmail.com",
-      link: "mailto:harsh9995soni@gmail.com"
-    },
-    {
-      icon: <Phone className="h-6 w-6" />,
-      title: "Phone",
-      value: "+91 8950775755",
-      link: "tel:+918950775755"
-    },
-    {
-      icon: <MapPin className="h-6 w-6" />,
-      title: "Location",
-      value: "Gurugram, India",
-      link: "https://maps.google.com/?q=Gurugram,India"
-    }
-  ]
-
-  const socialLinks = [
-    {
-      name: "GitHub",
-      icon: <Github className="h-6 w-6" />,
-      url: "https://github.com/harshcode1",
-      color: "hover:text-gray-400"
-    },
-    {
-      name: "LinkedIn",
-      icon: <Linkedin className="h-6 w-6" />,
-      url: "https://linkedin.com/in/harsh-soni-885651221",
-      color: "hover:text-blue-400"
-    },
-    {
-      name: "Email",
-      icon: <Mail className="h-6 w-6" />,
-      url: "mailto:harsh9995soni@gmail.com",
-      color: "hover:text-red-400"
-    }
-  ]
-
   return (
-    <section id="contact" className="py-20 px-4">
-      <div className="max-w-6xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+    <section id="contact" className="section-shell">
+      <div className="section-heading">
+        <p className="eyebrow">Contact</p>
+        <h2>Have a role or collaboration in mind?</h2>
+        <p>
+          Send a message with context, timeline, and where I can help. Open to software engineering
+          roles and meaningful full-stack product work.
+        </p>
+      </div>
+
+      <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+        <motion.form
+          initial={{ opacity: 0, x: -24 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] }}
+          onSubmit={handleSubmit}
+          className="contact-form"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Get In Touch</h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-purple-600 to-blue-600 mx-auto mb-8"></div>
-          <p className="text-white/60 max-w-2xl mx-auto">
-            I'm always open to discussing new opportunities, interesting projects, 
-            or just having a chat about technology. Let's connect!
-          </p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <label>
+              <span>Name</span>
+              <input name="name" value={formData.name} onChange={handleInputChange} placeholder="Your name" required />
+            </label>
+            <label>
+              <span>Email</span>
+              <input name="email" type="email" value={formData.email} onChange={handleInputChange} placeholder="you@example.com" required />
+            </label>
+          </div>
+          <label>
+            <span>Subject</span>
+            <input name="subject" value={formData.subject} onChange={handleInputChange} placeholder="What should we build or discuss?" required />
+          </label>
+          <label>
+            <span>Message</span>
+            <textarea name="message" value={formData.message} onChange={handleInputChange} placeholder="Share the useful details." rows={6} required />
+          </label>
+
+          <button type="submit" disabled={isSubmitting} className="primary-action w-full py-3.5 text-base">
+            {isSubmitting ? (
+              'Sending...'
+            ) : (
+              <>
+                <Send className="size-4" />
+                Send message
+              </>
+            )}
+          </button>
+
+          {submitStatus === 'success' && (
+            <p className="form-alert success">
+              <CheckCircle className="size-5 shrink-0" />
+              Message sent. I will get back to you soon.
+            </p>
+          )}
+          {submitStatus === 'error' && (
+            <p className="form-alert error">
+              <AlertCircle className="size-5 shrink-0" />
+              Message failed to send. Please email me directly.
+            </p>
+          )}
+          {submitStatus === 'missing-config' && (
+            <p className="form-alert error">
+              <AlertCircle className="size-5 shrink-0" />
+              Email service not configured. Use direct email below.
+            </p>
+          )}
+        </motion.form>
+
+        <motion.div
+          initial={{ opacity: 0, x: 24 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] }}
+          className="grid gap-5 content-start"
+        >
+          <article className="feature-card">
+            <h3>Direct channels</h3>
+            <div className="mt-5 grid gap-3">
+              {contactLinks.map((link) => {
+                const Icon = link.icon
+                return (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    className="contact-link"
+                    target={link.href.startsWith('http') ? '_blank' : undefined}
+                    rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                  >
+                    <span className="skill-icon-wrap size-10 shrink-0">
+                      <Icon className="size-4" />
+                    </span>
+                    <span>
+                      <span className="block text-xs text-white/40">{link.label}</span>
+                      <span className="block text-sm font-semibold text-white">{link.value}</span>
+                    </span>
+                  </a>
+                )
+              })}
+            </div>
+          </article>
+
+          <article className="feature-card">
+            <h3>Online</h3>
+            <div className="mt-5 flex flex-wrap gap-3">
+              {socialLinks.map((link) => {
+                const Icon = link.icon
+                return (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    className="action-link"
+                    target={link.href.startsWith('http') ? '_blank' : undefined}
+                    rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                  >
+                    <Icon className="size-4" />
+                    {link.label}
+                  </a>
+                )
+              })}
+            </div>
+          </article>
+
+          <article className="feature-card">
+            <h3>Resume</h3>
+            <p className="mt-3">
+              Quick review of my background, experience, and projects — all in one place.
+            </p>
+            <a href={resumeUrl} target="_blank" rel="noopener noreferrer" className="primary-action mt-5">
+              <Download className="size-4" />
+              Open resume PDF
+            </a>
+          </article>
         </motion.div>
-
-        <div className="grid lg:grid-cols-2 gap-12">
-          {/* Contact Form */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            className="bg-white/5 backdrop-blur-md rounded-2xl p-8 border border-white/10"
-          >
-            <h3 className="text-2xl font-semibold text-white mb-6">Send me a message</h3>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="name" className="block text-white/80 text-sm font-medium mb-2">
-                    Name
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
-                    placeholder="Your name"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="email" className="block text-white/80 text-sm font-medium mb-2">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
-                    placeholder="your.email@example.com"
-                  />
-                </div>
-              </div>
-              
-              <div>
-                <label htmlFor="subject" className="block text-white/80 text-sm font-medium mb-2">
-                  Subject
-                </label>
-                <input
-                  type="text"
-                  id="subject"
-                  name="subject"
-                  value={formData.subject}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
-                  placeholder="What's this about?"
-                />
-              </div>
-              
-              <div>
-                <label htmlFor="message" className="block text-white/80 text-sm font-medium mb-2">
-                  Message
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  value={formData.message}
-                  onChange={handleInputChange}
-                  required
-                  rows={5}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 resize-none"
-                  placeholder="Tell me about your project or just say hello!"
-                />
-              </div>
-              
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white py-3 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isSubmitting ? (
-                  <div className="flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                    Sending...
-                  </div>
-                ) : (
-                  <>
-                    <Send className="mr-2 h-5 w-5" />
-                    Send Message
-                  </>
-                )}
-              </Button>
-
-              {/* Success/Error Messages */}
-              {submitStatus === 'success' && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="flex items-center gap-2 p-4 bg-green-500/20 border border-green-500/50 rounded-lg text-green-400"
-                >
-                  <CheckCircle className="h-5 w-5" />
-                  <span>Message sent successfully! I'll get back to you soon.</span>
-                </motion.div>
-              )}
-              
-              {submitStatus === 'error' && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="flex items-center gap-2 p-4 bg-red-500/20 border border-red-500/50 rounded-lg text-red-400"
-                >
-                  <AlertCircle className="h-5 w-5" />
-                  <span>Failed to send message. Please try again or email me directly.</span>
-                </motion.div>
-              )}
-            </form>
-          </motion.div>
-
-          {/* Contact Info */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            className="space-y-8"
-          >
-            {/* Contact Information */}
-            <div className="bg-white/5 backdrop-blur-md rounded-2xl p-8 border border-white/10">
-              <h3 className="text-2xl font-semibold text-white mb-6">Contact Information</h3>
-              <div className="space-y-6">
-                {contactInfo.map((info, index) => (
-                  <motion.a
-                    key={index}
-                    href={info.link}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                    className="flex items-center gap-4 p-4 bg-white/5 rounded-lg hover:bg-white/10 transition-all duration-300 group"
-                  >
-                    <div className="p-3 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg text-white group-hover:scale-110 transition-transform duration-300">
-                      {info.icon}
-                    </div>
-                    <div>
-                      <h4 className="text-white font-medium">{info.title}</h4>
-                      <p className="text-white/70">{info.value}</p>
-                    </div>
-                  </motion.a>
-                ))}
-              </div>
-            </div>
-
-            {/* Social Links */}
-            <div className="bg-white/5 backdrop-blur-md rounded-2xl p-8 border border-white/10">
-              <h3 className="text-2xl font-semibold text-white mb-6">Follow Me</h3>
-              <div className="flex gap-4">
-                {socialLinks.map((social, index) => (
-                  <motion.a
-                    key={index}
-                    href={social.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                    className={`p-4 bg-white/10 rounded-lg text-white/70 ${social.color} transition-all duration-300 hover:scale-110 hover:bg-white/20`}
-                  >
-                    {social.icon}
-                  </motion.a>
-                ))}
-              </div>
-            </div>
-
-            {/* Resume Download */}
-            <div className="bg-white/5 backdrop-blur-md rounded-2xl p-8 border border-white/10">
-              <h3 className="text-2xl font-semibold text-white mb-4">Resume</h3>
-              <p className="text-white/70 mb-6">
-                Download my resume to learn more about my experience and qualifications.
-              </p>
-              <Button 
-                className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white"
-                onClick={() => window.open('https://drive.google.com/file/d/1Z9wZrCUtm3T3kHwUOMr6-Badut5UjcJa/view?usp=sharing', '_blank')}
-              >
-                <Download className="mr-2 h-5 w-5" />
-                Download Resume
-              </Button>
-            </div>
-
-            {/* Availability Status */}
-            <div className="bg-white/5 backdrop-blur-md rounded-2xl p-8 border border-white/10">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                <h3 className="text-xl font-semibold text-white">Available for Work</h3>
-              </div>
-              <p className="text-white/70">
-                I'm currently open to new opportunities and interesting projects. 
-                Let's discuss how we can work together!
-              </p>
-            </div>
-          </motion.div>
-        </div>
       </div>
     </section>
   )
 }
 
 export default ContactSection
-
