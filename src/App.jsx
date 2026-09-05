@@ -372,7 +372,7 @@ export default function App() {
 
         {/* ── About ──────────────────────────────────────────────────────── */}
         <section id="about" className="section-shell">
-          <span className="section-index">01 / 05</span>
+          <span className="section-index" aria-hidden="true">01 / 05</span>
           <div className="section-heading">
             <p className="eyebrow">About</p>
             <h2>A practical engineer with product instincts.</h2>
