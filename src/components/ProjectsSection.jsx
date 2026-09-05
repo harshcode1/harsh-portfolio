@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowUpRight, Github } from 'lucide-react'
 
@@ -73,12 +73,17 @@ const cardVariants = {
 
 function ProjectCard({ project, index }) {
   const ref = useRef(null)
+  const rafId = useRef(null)
   const onMouseMove = (e) => {
     const el = ref.current
     if (!el) return
-    const rect = el.getBoundingClientRect()
-    el.style.setProperty('--mx', `${((e.clientX - rect.left) / rect.width) * 100}%`)
-    el.style.setProperty('--my', `${((e.clientY - rect.top) / rect.height) * 100}%`)
+    const { clientX, clientY } = e
+    if (rafId.current) cancelAnimationFrame(rafId.current)
+    rafId.current = requestAnimationFrame(() => {
+      const rect = el.getBoundingClientRect()
+      el.style.setProperty('--mx', `${((clientX - rect.left) / rect.width) * 100}%`)
+      el.style.setProperty('--my', `${((clientY - rect.top) / rect.height) * 100}%`)
+    })
   }
 
   return (
@@ -152,7 +157,7 @@ const ProjectsSection = () => {
 
   return (
     <section id="projects" className="section-shell">
-      <span className="section-index">03 / 05</span>
+      <span className="section-index" aria-hidden="true">03 / 05</span>
       <div className="section-heading">
         <p className="eyebrow">Projects</p>
         <h2>Case studies, not a wall of tech logos.</h2>

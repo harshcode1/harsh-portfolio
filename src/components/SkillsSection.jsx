@@ -83,7 +83,7 @@ const cardVariants = {
 export default function SkillsSection() {
   return (
     <section id="skills" className="section-shell">
-      <span className="section-index">04 / 05</span>
+      <span className="section-index" aria-hidden="true">04 / 05</span>
       <div className="section-heading">
         <p className="eyebrow">Skills</p>
         <h2>AI-native stack built for production delivery.</h2>

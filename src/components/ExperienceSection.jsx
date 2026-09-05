@@ -49,7 +49,7 @@ export default function ExperienceSection() {
 
   return (
     <section id="experience" ref={sectionRef} className="section-shell">
-      <span className="section-index">02 / 05</span>
+      <span className="section-index" aria-hidden="true">02 / 05</span>
       <div className="section-heading">
         <p className="eyebrow">Experience</p>
         <h2>Engineering roles — AI systems to enterprise backends.</h2>
