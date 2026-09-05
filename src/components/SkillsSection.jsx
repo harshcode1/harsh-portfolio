@@ -6,7 +6,7 @@ const skillGroups = [
   {
     title: 'AI & Agentic Systems',
     icon: Bot,
-    skills: ['Multi-agent Orchestration', 'LLM Integration', 'Agentic Workflows', 'Prompt Engineering', 'Anthropic SDK', 'Phoenix OS', 'Deterministic AI']
+    skills: ['Multi-agent Orchestration', 'LLM Integration', 'Agentic Workflows', 'Prompt Engineering', 'AI Adoption & Enablement', 'Phoenix OS', 'Deterministic AI']
   },
   {
     title: 'Backend Engineering',
@@ -36,7 +36,7 @@ const skillGroups = [
 ]
 
 /* Two marquee rows with different speeds + directions */
-const ROW_1 = ['Multi-agent AI', 'Phoenix OS', 'LLM Orchestration', 'Java', 'Spring Boot', 'React.js', 'Next.js 14', 'TypeScript', 'Node.js', 'Docker', 'AWS', 'Azure', 'GCP', 'Anthropic SDK', 'Spring Security']
+const ROW_1 = ['Multi-agent AI', 'Phoenix OS', 'AI Adoption', 'LLM Orchestration', 'Java', 'Spring Boot', 'React.js', 'Next.js 14', 'TypeScript', 'Node.js', 'Docker', 'AWS', 'Azure', 'GCP', 'Spring Security']
 const ROW_2 = ['Agentic Workflows', 'Prompt Engineering', 'TDD', 'JUnit', 'Mockito', 'CI/CD', 'GitHub Actions', 'SonarQube', 'System Design', 'Microservices', 'DSA', 'Tailwind CSS', 'DevSecOps', 'Hibernate']
 
 const COUNTERS = [
