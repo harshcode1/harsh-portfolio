@@ -40,7 +40,7 @@ const ROW_1 = ['Multi-agent AI', 'Phoenix OS', 'LLM Orchestration', 'Java', 'Spr
 const ROW_2 = ['Agentic Workflows', 'Prompt Engineering', 'TDD', 'JUnit', 'Mockito', 'CI/CD', 'GitHub Actions', 'SonarQube', 'System Design', 'Microservices', 'DSA', 'Tailwind CSS', 'DevSecOps', 'Hibernate']
 
 const COUNTERS = [
-  { end: 19,   suffix: '+',  label: 'Phoenix OS\nagents built' },
+  { end: 24,   suffix: '',  label: 'Phoenix OS\nspecialized agents' },
   { end: 85,   suffix: '%',  label: 'frontend handoff\ntime cut' },
   { end: 1600, suffix: '+',  label: 'Codeforces\nrating' },
   { end: 500,  suffix: '+',  label: 'DSA problems\nsolved' }
@@ -83,6 +83,7 @@ const cardVariants = {
 export default function SkillsSection() {
   return (
     <section id="skills" className="section-shell">
+      <span className="section-index">04 / 05</span>
       <div className="section-heading">
         <p className="eyebrow">Skills</p>
         <h2>AI-native stack built for production delivery.</h2>
@@ -158,7 +159,7 @@ export default function SkillsSection() {
         {[
           {
             title: 'Phoenix OS & Agentic AI',
-            body: 'Contributor to Phoenix OS (Nagarro Ventures Studios) — an agentic framework featuring 19 specialized agents, a 62-file LTM memory system, and deterministic AI output via frozen artifact cascades. Hands-on with multi-agent orchestration, LLM tool-calling, and enterprise-grade prompt pipelines.'
+            body: 'Core-team engineer on Phoenix OS — an agentic, spec-driven SDLC framework featuring 24 specialized agents, a 126-file memory layer, and deterministic AI output via frozen artifact cascades, tool-agnostic across Claude Code, Copilot, Codex, and Cursor. Hands-on with multi-agent orchestration, MCP tool-calling, and enterprise-grade prompt pipelines.'
           },
           {
             title: 'Achievements & Certifications',

@@ -11,13 +11,12 @@ const experiences = [
     current: true,
     summary: 'Contributing to Phoenix OS — Nagarro Ventures Studios\' agentic framework for spec-driven development — while shipping Spring Boot services, React interfaces, and AI-driven DevOps automation at enterprise scale.',
     impact: [
-      'Contributing to Phoenix OS (Nagarro Ventures Studios) — a multi-agent framework with 19 specialized agents and 21+ orchestration commands that makes AI copilots deterministic for enterprise code generation.',
-      'Engineered the Context Retention System — Phoenix OS\'s Long-Term Memory (LTM) module — managing 62 accumulated pattern/standard files with automated TDD Quality Gates enforcing Red Phase compliance checks.',
-      'Built the DevOps Orchestration Agent (DevXopsGuardian) generating 29–47 multi-cloud CI/CD config files (GitHub Actions, Azure DevOps, GitLab CI, Jenkins) with integrated DevSecOps safeguards — 2-day setup reduced to ~15 min.',
-      'Built Atomic React.js components with reusable Tailwind design tokens; structured code reviews cut frontend handoff time by 85%.',
-      'Enhanced iLease (Erste Bank FinTech) by optimising Spring Boot microservices and multi-threaded modules — 15% improvement in high-volume transaction throughput.'
+      'Engineering Phoenix OS as part of the core team — 24 specialized agents read/write against a 126-file memory layer to turn a non-deterministic AI coding assistant into a deterministic delivery system, tool-agnostic across Claude Code, Copilot, Codex, and Cursor.',
+      'Implemented "Explicit via Abstraction" — hard-coded decision rules drive deterministic behavior, executing consistently across GitHub/GitLab/Azure DevOps and Node/Python/Java stacks.',
+      'Designed a DevOps orchestration flow that one-shot-scaffolds an 18-file CI + DevSecOps pipeline (GitHub Actions, Gitleaks, SonarQube, Snyk) with PR-gated triggers.',
+      'Shipped performance improvements on enterprise banking-sector microservices — optimizing Spring Boot services and multi-threaded modules for high-volume transaction throughput.'
     ],
-    stack: ['Multi-agent Systems', 'LLM Orchestration', 'Java 8+', 'Spring Boot', 'React.js', 'TDD', 'JUnit', 'Mockito', 'Azure', 'AWS', 'GCP', 'Anthropic SDK']
+    stack: ['Multi-agent Systems', 'Java 8+', 'Spring Boot', 'React.js', 'TDD', 'JUnit', 'Mockito', 'Azure', 'AWS', 'GCP']
   },
   {
     title: 'Full Stack Intern',
@@ -32,19 +31,6 @@ const experiences = [
       'Maintained clean, modular backend code following established Java-style best practices.'
     ],
     stack: ['React', 'Node.js', 'REST APIs', 'Git', 'Agile/Scrum', 'SEO', 'Lighthouse']
-  },
-  {
-    title: 'Amazon ML Summer School',
-    company: 'Amazon',
-    location: 'Remote',
-    period: 'Sep 2023 – Oct 2023',
-    current: false,
-    summary: 'Selected from 60,000+ nationwide applicants (~5% acceptance) for Amazon\'s elite machine learning programme.',
-    impact: [
-      'Studied probabilistic graphical models, reinforcement learning, deep neural networks, unsupervised and supervised learning.',
-      'ML fundamentals that directly inform AI-assisted application development and system design decisions.'
-    ],
-    stack: ['Machine Learning', 'Deep Learning', 'Neural Networks', 'Reinforcement Learning', 'PGMs']
   }
 ]
 
@@ -63,6 +49,7 @@ export default function ExperienceSection() {
 
   return (
     <section id="experience" ref={sectionRef} className="section-shell">
+      <span className="section-index">02 / 05</span>
       <div className="section-heading">
         <p className="eyebrow">Experience</p>
         <h2>Engineering roles — AI systems to enterprise backends.</h2>
@@ -105,7 +92,7 @@ export default function ExperienceSection() {
                       </span>
                     )}
                   </div>
-                  <p className="mt-0.5 text-base font-semibold text-cyan-300">{exp.company}</p>
+                  <p className="mt-0.5 text-base font-semibold" style={{ color: '#ffb020' }}>{exp.company}</p>
                 </div>
               </div>
 
