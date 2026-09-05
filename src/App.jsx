@@ -23,6 +23,7 @@ const navItems = [
 
 const ROLES = [
   'AI Systems Engineer',
+  'AI Adoption Engineer',
   'Agentic Framework Builder',
   'Full Stack Developer',
   'Java · Spring Boot Dev'

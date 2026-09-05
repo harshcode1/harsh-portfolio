@@ -14,9 +14,9 @@ const experiences = [
       'Engineering Phoenix OS as part of the core team — 24 specialized agents read/write against a 126-file memory layer to turn a non-deterministic AI coding assistant into a deterministic delivery system, tool-agnostic across Claude Code, Copilot, Codex, and Cursor.',
       'Implemented "Explicit via Abstraction" — hard-coded decision rules drive deterministic behavior, executing consistently across GitHub/GitLab/Azure DevOps and Node/Python/Java stacks.',
       'Designed a DevOps orchestration flow that one-shot-scaffolds an 18-file CI + DevSecOps pipeline (GitHub Actions, Gitleaks, SonarQube, Snyk) with PR-gated triggers.',
-      'Shipped performance improvements on enterprise banking-sector microservices — optimizing Spring Boot services and multi-threaded modules for high-volume transaction throughput.'
+      'Driving AI-SDLC adoption across client engineering teams — customizing Phoenix OS\'s agents, skills, and commands to each team\'s workflow for faster, cheaper releases.'
     ],
-    stack: ['Multi-agent Systems', 'Java 8+', 'Spring Boot', 'React.js', 'TDD', 'JUnit', 'Mockito', 'Azure', 'AWS', 'GCP']
+    stack: ['Multi-agent Systems', 'AI Adoption', 'Java 8+', 'Spring Boot', 'React.js', 'TDD', 'JUnit', 'Mockito', 'Azure', 'AWS', 'GCP']
   },
   {
     title: 'Full Stack Intern',
