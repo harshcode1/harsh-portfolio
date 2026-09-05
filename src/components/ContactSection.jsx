@@ -46,6 +46,7 @@ export default function ContactSection({ resumeUrl }) {
 
   return (
     <section id="contact" className="section-shell">
+      <span className="section-index">05 / 05</span>
       <div className="section-heading">
         <p className="eyebrow">Contact</p>
         <h2>Have a role or project in mind?</h2>

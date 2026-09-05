@@ -1,121 +1,144 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowUpRight, Github, Layers3 } from 'lucide-react'
+import { ArrowUpRight, Github } from 'lucide-react'
 
 const projects = [
   {
     title: 'TaskForge',
     type: 'Full Stack',
-    description:
-      'Self-hosted Jira-style tracker with 5-tier RBAC, drag-and-drop Kanban, Swagger API docs, Docker deployment, and automated email reminders.',
-    gradient: 'from-cyan-500/25 via-blue-500/15 to-indigo-600/25',
-    icon: '⚡',
-    stack: ['Spring Boot 3', 'Next.js 14', 'MySQL', 'JWT', 'JUnit', 'Docker'],
-    proof: [
-      '5-tier RBAC via Spring Security + JWT; REST API docs via Swagger.',
-      'Docker + docker-compose one-command spin-up; Spring Scheduler reminders — improved on-time closure by 40%.',
-      'Drag-and-drop Kanban with sub-100ms transitions for 500+ concurrent users.',
-    ],
-    github: 'https://github.com/harshcode1/TaskForge-Backend',
+    problem: 'Self-hostable Jira alternatives usually skip the parts that are actually hard — real authorization, a test suite, a deployment story.',
+    approach: 'A Spring Boot REST API with JWT auth and role-based authorization enforced at the service layer (not just the route), paired with a Next.js Kanban frontend and a real test suite on both sides.',
+    outcome: '18 endpoints, 69 tests, one Docker command to run the whole stack.',
+    stack: ['Spring Boot 3.5.3', 'Spring Security 6', 'Next.js 14', 'MySQL', 'JWT', 'Docker'],
+    github: 'https://github.com/harshcode1/TaskForge',
     demo: '',
     featured: true
   },
   {
     title: 'BetterMind',
     type: 'Full Stack',
-    description:
-      'Mental health platform connecting users with qualified therapists — mood tracking, appointment scheduling, secure messaging, and mental health assessments.',
-    gradient: 'from-violet-500/25 via-purple-500/15 to-pink-600/25',
-    icon: '🧠',
-    stack: ['Next.js 14', 'MongoDB', 'Google OAuth', 'Google Calendar API', 'JWT', 'Tailwind CSS'],
-    proof: [
-      'Therapist discovery + scheduling via Google Calendar API integration.',
-      'Secure messaging and mental health assessments with role-based access.',
-      'Google OAuth authentication; session-safe JWT token management.',
-    ],
+    problem: 'Mental-health apps often bolt on auth as an afterthought — a platform handling clinical assessment data can\'t.',
+    approach: 'Custom JWT layer gating a TOTP 2FA challenge before token issuance, AES-encrypted sensitive fields, a reusable per-route rate limiter, and a guest mode that\'s structurally incapable of writing to the database.',
+    outcome: '2FA-gated auth, AES encryption at rest, zero-risk guest demo mode.',
+    stack: ['Next.js 14', 'MongoDB', 'OpenAI', 'JWT + TOTP 2FA', 'Tailwind CSS'],
     github: 'https://github.com/harshcode1/BetterMind',
+    demo: 'https://better-mind-mauve.vercel.app/',
+    featured: true
+  },
+  {
+    title: 'QueryConnect',
+    type: 'Full Stack',
+    problem: 'Most "full-stack" portfolios only ever show one frontend framework — wanted to prove Spring Boot fluency pairs with more than just React.',
+    approach: 'A layered Spring Boot API (controller / service / repository / DTO) behind a JWT filter chain, paired with an Angular 19 standalone-component frontend using the modern functional-interceptor pattern.',
+    outcome: 'Two frameworks, one auth model, containerized end-to-end.',
+    stack: ['Spring Boot 3.4.5', 'Angular 19', 'MySQL', 'Docker'],
+    github: 'https://github.com/harshcode1/QueryConnect',
     demo: '',
     featured: true
   },
   {
-    title: 'Instant-Connect',
-    type: 'Full Stack',
-    description:
-      'WhatsApp-style real-time group chat — one-on-one and group messaging, typing indicators, online/offline presence, and message read receipts.',
-    gradient: 'from-emerald-500/25 via-teal-500/15 to-cyan-600/25',
-    icon: '💬',
-    stack: ['React', 'Node.js', 'Express', 'Socket.IO', 'MongoDB', 'Chakra UI'],
-    proof: [
-      'Real-time bidirectional messaging via Socket.IO with typing indicators and read receipts.',
-      'Group management with online/offline presence tracking.',
-      'Full MERN stack; chat search and message history persistence.',
-    ],
-    github: 'https://github.com/harshcode1/Instant-Connect',
+    title: 'ai-video-pipeline',
+    type: 'AI / Backend',
+    problem: 'AI image-generation providers keep dying mid-project — free tiers vanish, response shapes change without notice.',
+    approach: 'An abstract provider interface so switching APIs is a one-line config change, not a rewrite — plus HTTP failure classification so deterministic errors fail fast instead of burning retries on an unattended multi-hour render.',
+    outcome: 'Survived two live provider outages in production, zero rewrites.',
+    stack: ['Python', 'edge-tts', 'fal.ai (FLUX.2)', 'ffmpeg'],
+    github: 'https://github.com/harshcode1/ai-video-pipeline',
     demo: '',
     featured: true
   },
   {
     title: 'Cryptonite',
     type: 'Frontend',
-    description:
-      'PWA crypto-trading simulator with offline INR wallet, live coin data via CoinGecko, CSV portfolio export, and high-performance React rendering.',
-    gradient: 'from-orange-500/25 via-amber-400/15 to-yellow-600/25',
-    icon: '📈',
-    stack: ['Next.js 14', 'React 18', 'CoinGecko API', 'Recharts', 'PWA'],
-    proof: [
-      'Multi-layer caching reduced CoinGecko API calls by 80%.',
-      'react-window optimisation cut 10,000-row table draw time by 65%.',
-      'Charts load under 200ms; offline INR wallet + CSV export.',
-    ],
+    problem: 'Free-tier crypto APIs rate-limit aggressively — most weekend projects just show a spinner or crash when that happens.',
+    approach: 'Every CoinGecko call proxied through server-side routes behind a 4-layer fallback chain (fresh cache → live API → stale cache → static JSON → hardcoded defaults), so the UI never goes empty.',
+    outcome: 'Installable offline PWA that survives rate limits and dead connections alike.',
+    stack: ['Next.js 14', 'React 18', 'CoinGecko API', 'Recharts'],
     github: 'https://github.com/harshcode1/Cryptonite',
-    demo: '',
-    featured: false
-  },
-  {
-    title: 'QueryConnect',
-    type: 'Full Stack',
-    description:
-      'Community-driven Q&A platform — question posting, answers, comments, search, and role-based access control across frontend and Spring Boot backend.',
-    gradient: 'from-blue-500/25 via-indigo-500/15 to-violet-600/25',
-    icon: '❓',
-    stack: ['Next.js', 'Spring Boot', 'MySQL', 'JWT', 'Tailwind CSS'],
-    proof: [
-      'Full-stack RBAC: Spring Boot REST backend + React frontend.',
-      'Search, community stats, question/answer/comment flows.',
-      'JWT-secured API with Spring Security; MySQL persistence layer.',
-    ],
-    github: 'https://github.com/harshcode1/QueryConnect',
-    demo: '',
-    featured: false
-  },
-  {
-    title: 'FundMeNow',
-    type: 'Frontend',
-    description:
-      'Creator donation platform — no login required for donors, creator profiles, and Razorpay payment gateway integration for seamless transactions.',
-    gradient: 'from-rose-500/25 via-pink-500/15 to-fuchsia-600/25',
-    icon: '💸',
-    stack: ['Next.js', 'Tailwind CSS', 'Razorpay API', 'PostCSS'],
-    proof: [
-      'Razorpay payment integration — donors can contribute without an account.',
-      'Creator profile pages with customisable funding goals.',
-      'Optimised Lighthouse score; responsive across all breakpoints.',
-    ],
-    github: 'https://github.com/harshcode1/FundMeNow',
-    demo: '',
+    demo: 'https://cryptonite-seven-phi.vercel.app/',
     featured: false
   }
 ]
 
-const filters = ['Featured', 'Full Stack', 'Frontend', 'All']
+const filters = ['Featured', 'Full Stack', 'AI / Backend', 'Frontend', 'All']
 
 const cardVariants = {
   hidden: { opacity: 0, y: 24 },
   visible: (i) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.48, delay: i * 0.07, ease: [0.25, 0.46, 0.45, 0.94] }
+    transition: { duration: 0.44, delay: i * 0.06, ease: [0.25, 0.46, 0.45, 0.94] }
   })
+}
+
+function ProjectCard({ project, index }) {
+  const ref = useRef(null)
+  const onMouseMove = (e) => {
+    const el = ref.current
+    if (!el) return
+    const rect = el.getBoundingClientRect()
+    el.style.setProperty('--mx', `${((e.clientX - rect.left) / rect.width) * 100}%`)
+    el.style.setProperty('--my', `${((e.clientY - rect.top) / rect.height) * 100}%`)
+  }
+
+  return (
+    <motion.article
+      ref={ref}
+      onMouseMove={onMouseMove}
+      custom={index}
+      variants={cardVariants}
+      initial="hidden"
+      animate="visible"
+      className="project-card group"
+    >
+      <div className="project-body">
+        <div className="flex items-start justify-between gap-3">
+          <span className="project-index">{String(index + 1).padStart(2, '0')} / {project.type}</span>
+          {project.featured && <span className="status-pill">Featured</span>}
+        </div>
+
+        <h3 className="mt-2.5 text-lg font-bold" style={{ fontFamily: 'var(--font-mono)', color: 'var(--ink-paper)' }}>
+          {project.title}
+        </h3>
+
+        <div className="spec-row">
+          <span className="spec-label">Problem</span>
+          <p className="spec-value">{project.problem}</p>
+        </div>
+
+        <div className="spec-row">
+          <span className="spec-label">Approach</span>
+          <p className="spec-value">{project.approach}</p>
+        </div>
+
+        <div className="spec-row">
+          <span className="spec-label">Outcome</span>
+          <p className="outcome-headline">{project.outcome}</p>
+        </div>
+
+        <div className="mt-4 flex flex-wrap gap-1.5">
+          {project.stack.map((tech) => (
+            <span key={tech} className="tech-pill">{tech}</span>
+          ))}
+        </div>
+
+        <div className="mt-auto pt-4 flex flex-wrap gap-2">
+          {project.github && (
+            <a className="action-link py-1.5 px-3 text-xs" href={project.github} target="_blank" rel="noopener noreferrer">
+              <Github className="size-3.5" />
+              Source
+            </a>
+          )}
+          {project.demo && (
+            <a className="action-link py-1.5 px-3 text-xs" href={project.demo} target="_blank" rel="noopener noreferrer">
+              <ArrowUpRight className="size-3.5" />
+              Live
+            </a>
+          )}
+        </div>
+      </div>
+    </motion.article>
+  )
 }
 
 const ProjectsSection = () => {
@@ -129,12 +152,13 @@ const ProjectsSection = () => {
 
   return (
     <section id="projects" className="section-shell">
+      <span className="section-index">03 / 05</span>
       <div className="section-heading">
         <p className="eyebrow">Projects</p>
-        <h2>Selected work — scope, tradeoffs, impact.</h2>
+        <h2>Case studies, not a wall of tech logos.</h2>
         <p>
-          Six projects spanning full-stack SaaS, real-time apps, payments, crypto, and FinTech —
-          each built around production concerns: auth, latency, deployment, and measurable wins.
+          Five projects, each broken down the way I'd explain it in an interview —
+          the problem, the approach, and what it actually shipped.
         </p>
       </div>
 
@@ -147,15 +171,20 @@ const ProjectsSection = () => {
               key={filter}
               onClick={() => setActiveFilter(filter)}
               aria-pressed={activeFilter === filter}
-              className={`rounded-full px-4 py-1.5 text-sm font-semibold transition-all duration-200 ${
+              className={`rounded-md px-4 py-1.5 font-mono text-xs font-semibold transition-all duration-200 ${
                 activeFilter === filter
-                  ? 'bg-white text-[#080c14] shadow-[0_0_18px_rgba(255,255,255,0.18)]'
-                  : 'border border-white/10 bg-white/4 text-white/55 hover:border-white/20 hover:bg-white/8 hover:text-white'
+                  ? 'text-[#14100a]'
+                  : 'border text-white/50 hover:text-white'
               }`}
+              style={
+                activeFilter === filter
+                  ? { background: '#ffb020' }
+                  : { borderColor: 'var(--ink-line-strong)' }
+              }
             >
               {filter}
-              {filter === 'All' && <span className="ml-1.5 opacity-50 text-xs">{projects.length}</span>}
-              {filter === 'Featured' && <span className="ml-1.5 opacity-50 text-xs">{projects.filter(p => p.featured).length}</span>}
+              {filter === 'All' && <span className="ml-1.5 opacity-50">{projects.length}</span>}
+              {filter === 'Featured' && <span className="ml-1.5 opacity-50">{projects.filter(p => p.featured).length}</span>}
             </button>
           ))}
         </div>
@@ -170,75 +199,7 @@ const ProjectsSection = () => {
             className="grid gap-5 lg:grid-cols-2 xl:grid-cols-3"
           >
             {filtered.map((project, index) => (
-              <motion.article
-                key={project.title}
-                custom={index}
-                variants={cardVariants}
-                initial="hidden"
-                animate="visible"
-                className="project-card group"
-              >
-                {/* visual area */}
-                <div className="project-visual">
-                  <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient}`} />
-                  <div className="absolute inset-0" style={{ background: 'radial-gradient(circle at 50% 50%, rgba(255,255,255,0.04), transparent 65%)' }} />
-                  <div className="relative z-10 flex flex-col items-center gap-2">
-                    <span className="text-4xl">{project.icon}</span>
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-white/50 border border-white/15 rounded-full px-2.5 py-0.5">
-                      {project.type}
-                    </span>
-                  </div>
-                </div>
-
-                {/* body */}
-                <div className="project-body">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <p className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-cyan-400">
-                        <Layers3 className="size-3" />
-                        {project.type}
-                      </p>
-                      <h3 className="mt-1 text-lg font-bold">{project.title}</h3>
-                    </div>
-                    {project.featured && (
-                      <span className="status-pill shrink-0 text-[10px]">Featured</span>
-                    )}
-                  </div>
-
-                  <p className="mt-2.5 text-white/55 text-xs leading-relaxed">{project.description}</p>
-
-                  <ul className="mt-3.5 space-y-2">
-                    {project.proof.map((item) => (
-                      <li key={item} className="impact-item text-xs">
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-
-                  <div className="mt-3.5 flex flex-wrap gap-1.5">
-                    {project.stack.map((tech) => (
-                      <span key={tech} className="tech-pill">
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-
-                  <div className="mt-auto pt-4 flex flex-wrap gap-2">
-                    {project.github && (
-                      <a className="action-link py-1.5 px-3 text-xs" href={project.github} target="_blank" rel="noopener noreferrer">
-                        <Github className="size-3.5" />
-                        GitHub
-                      </a>
-                    )}
-                    {project.demo && (
-                      <a className="action-link py-1.5 px-3 text-xs" href={project.demo} target="_blank" rel="noopener noreferrer">
-                        <ArrowUpRight className="size-3.5" />
-                        Live
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </motion.article>
+              <ProjectCard key={project.title} project={project} index={index} />
             ))}
           </motion.div>
         </AnimatePresence>

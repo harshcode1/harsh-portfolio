@@ -131,13 +131,13 @@ export default function App() {
   }, [])
 
   const stats = useMemo(() => [
-    { value: '19+',      label: 'AI agents · Phoenix OS' },
+    { value: '24',       label: 'AI agents · Phoenix OS' },
     { value: '1600+',    label: 'Codeforces rating' },
     { value: 'Top 5%',   label: 'Amazon ML School \'23' }
   ], [])
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-[#09091a] text-white">
+    <div className="min-h-screen overflow-x-hidden bg-[#0a0a0a] text-white">
 
       {/* grain texture */}
       <div className="noise-overlay" aria-hidden="true" />
@@ -146,7 +146,7 @@ export default function App() {
       <nav
         className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
           scrolled
-            ? 'border-b border-white/[0.06] bg-[#09091a]/90 backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,.45)]'
+            ? 'border-b border-white/[0.06] bg-[#0a0a0a]/90 backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,.45)]'
             : 'bg-transparent'
         }`}
       >
@@ -154,12 +154,12 @@ export default function App() {
 
           <button type="button" onClick={() => scrollTo('home')} className="flex items-center gap-2.5" aria-label="Home">
             <span
-              className="grid size-9 place-items-center rounded-lg text-sm font-bold text-cyan-300"
-              style={{ background: 'linear-gradient(135deg,rgba(34,211,238,.14),rgba(139,92,246,.14))', border: '1px solid rgba(34,211,238,.28)' }}
+              className="grid size-9 place-items-center rounded-md font-mono text-sm font-bold"
+              style={{ background: 'rgba(255,176,32,.1)', border: '1px solid rgba(255,176,32,.28)', color: '#ffb020' }}
             >
               HS
             </span>
-            <span className="hidden text-sm font-semibold text-white sm:block">Harsh Soni</span>
+            <span className="hidden font-mono text-sm font-semibold text-white sm:block">Harsh Soni</span>
           </button>
 
           {/* desktop nav */}
@@ -190,7 +190,7 @@ export default function App() {
           <motion.div
             initial={{ opacity: 0, y: -6 }}
             animate={{ opacity: 1, y: 0 }}
-            className="border-t border-white/[0.07] bg-[#09091a]/95 backdrop-blur-2xl px-4 py-2 md:hidden"
+            className="border-t border-white/[0.07] bg-[#0a0a0a]/95 backdrop-blur-2xl px-4 py-2 md:hidden"
           >
             {navItems.map(({ id, label }) => (
               <button
@@ -237,7 +237,8 @@ export default function App() {
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
-                  className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/7 px-3.5 py-1.5 text-xs font-semibold text-emerald-200"
+                  className="mb-5 inline-flex items-center gap-2 rounded-md border px-3.5 py-1.5 font-mono text-xs font-semibold"
+                  style={{ borderColor: 'rgba(255,176,32,.28)', background: 'rgba(255,176,32,.08)', color: '#ffb020' }}
                 >
                   <span className="avail-dot" />
                   <BriefcaseBusiness className="size-3.5" />
@@ -250,13 +251,13 @@ export default function App() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.65, delay: 0.08 }}
                 >
-                  <p className="mb-1 text-lg font-medium text-white/45 sm:text-xl">Hi, I'm</p>
+                  <p className="mb-1 font-mono text-lg font-medium text-white/40 sm:text-xl">Hi, I'm</p>
                   <h1
                     className="font-black tracking-tight text-white"
                     style={{ fontSize: 'clamp(2.8rem,6.5vw,4.8rem)', lineHeight: 1.05, letterSpacing: '-.03em' }}
                   >
-                    Harsh <span className="text-gradient">Soni</span>
-                    <span style={{ color: '#22d3ee' }}>.</span>
+                    Harsh <span className="marker">Soni</span>
+                    <span style={{ color: '#ffb020' }}>.</span>
                   </h1>
                 </motion.div>
 
@@ -265,9 +266,9 @@ export default function App() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.4, delay: 0.22 }}
-                  className="mt-3 mb-5 flex items-center gap-2 text-base font-medium text-white/55 sm:text-lg"
+                  className="mt-3 mb-5 flex items-center gap-2 font-mono text-base font-medium text-white/55 sm:text-lg"
                 >
-                  <span className="text-gradient-cyan font-semibold">{role}</span>
+                  <span className="font-semibold" style={{ color: '#ffb020' }}>{role}</span>
                   <span className="tw-cursor" />
                 </motion.div>
 
@@ -276,11 +277,12 @@ export default function App() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.55, delay: 0.3 }}
-                  className="mb-8 max-w-lg text-base leading-7 text-white/52"
+                  className="mb-8 max-w-lg text-base leading-7 text-white/55"
                 >
-                  CS grad contributing to Phoenix OS — a Nagarro Ventures Studios agentic framework that makes
-                  AI copilots deterministic for enterprise code generation. I ship multi-agent systems,
-                  Spring Boot services, and React interfaces that teams rely on in production.
+                  I engineer Phoenix OS at Nagarro — an agentic framework where 24 specialized
+                  agents turn AI coding assistants into deterministic delivery systems. Outside
+                  of that: Spring Boot services, React interfaces, and side projects that ship,
+                  not just compile.
                 </motion.p>
 
                 {/* CTAs */}
@@ -370,6 +372,7 @@ export default function App() {
 
         {/* ── About ──────────────────────────────────────────────────────── */}
         <section id="about" className="section-shell">
+          <span className="section-index">01 / 05</span>
           <div className="section-heading">
             <p className="eyebrow">About</p>
             <h2>A practical engineer with product instincts.</h2>
@@ -410,9 +413,10 @@ export default function App() {
             <AboutCard className="lg:col-span-2">
               <h3>How I work</h3>
               <p className="mt-2.5 text-sm leading-7">
-                AI-native development where agents are deterministic, not probabilistic. Readable code,
-                measurable outcomes, and systems that can be explained and improved. TDD compliance gates,
-                frozen artifact cascades, and clean APIs — non-negotiable in everything I ship.
+                Spec before code, tests before "done," and a clear paper trail for every non-obvious
+                decision — habits I picked up building a framework whose entire job is making AI-assisted
+                delivery deterministic instead of a coin flip. Readable code and APIs that don't need a
+                Slack thread to understand are non-negotiable.
               </p>
             </AboutCard>
           </div>
