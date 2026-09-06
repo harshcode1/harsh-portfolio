@@ -6,10 +6,10 @@ const projects = [
   {
     title: 'TaskForge',
     type: 'Full Stack',
-    problem: 'Self-hostable Jira alternatives usually skip the parts that are actually hard — real authorization, a test suite, a deployment story.',
-    approach: 'A Spring Boot REST API with JWT auth and role-based authorization enforced at the service layer (not just the route), paired with a Next.js Kanban frontend and a real test suite on both sides.',
-    outcome: '18 endpoints, 69 tests, one Docker command to run the whole stack.',
-    stack: ['Spring Boot 3.5.3', 'Spring Security 6', 'Next.js 14', 'MySQL', 'JWT', 'Docker'],
+    problem: 'Self-hostable Jira alternatives usually skip the parts that are actually hard — real authorization, live multi-user sync, a test suite, a deployment story.',
+    approach: 'A Spring Boot REST + WebSocket API with JWT auth and role-based authorization enforced at the service layer (not just the route), broadcasting task changes live over STOMP with a deliberately thin, broadcast-only payload — paired with a Next.js Kanban frontend, an AI task assistant with real graceful degradation, and a test suite on both sides.',
+    outcome: '25 endpoints, live collaboration over WebSocket, 93 tests, one Docker command to run the whole stack.',
+    stack: ['Spring Boot 3.5.3', 'Spring Security 6', 'WebSocket/STOMP', 'Next.js 14', 'MySQL', 'JWT', 'OpenAI', 'Docker'],
     github: 'https://github.com/harshcode1/TaskForge',
     demo: '',
     featured: true
